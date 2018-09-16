@@ -6,7 +6,7 @@
 <!-- Title  -->
 <title>Amado - Furniture Ecommerce Template | Cart</title>
 <!-- Favicon  -->
-<link rel="icon" href="../../assets/img/core-img/favicon.ico">
+<link rel="icon" href="../../../assets/img/core-img/favicon.ico">
 <!-- Core Style CSS -->
-<link rel="stylesheet" href="../../assets/css/core-style.css">
-<link rel="stylesheet" href="../../assets/css/style.css">
+<link rel="stylesheet" href="../../../assets/css/core-style.css">
+<link rel="stylesheet" href="../../../assets/css/style.css">

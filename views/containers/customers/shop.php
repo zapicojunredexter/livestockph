@@ -4,7 +4,7 @@
 <head>
     
     <?php
-        require_once('../includes/customers_main_header.php');
+        require_once('../../components/customers_main_header.php');
     ?>
 
 </head>
@@ -21,7 +21,7 @@
                     <div class="search-content">
                         <form action="#" method="get">
                             <input type="search" name="search" id="search" placeholder="Type your keyword...">
-                            <button type="submit"><img src="../../assets/img/core-img/search.png" alt=""></button>
+                            <button type="submit"><img src="../../../assets/img/core-img/search.png" alt=""></button>
                         </form>
                     </div>
                 </div>
@@ -34,7 +34,7 @@
     <div class="main-content-wrapper d-flex clearfix">
         
         <?php
-            require_once('../includes/customers_main_sidebar.php');
+            require_once('../../components/customers_main_sidebar.php');
         ?>
 
         <div class="shop_sidebar_area" style="padding-top:20px;">
@@ -189,9 +189,9 @@
                         <div class="single-product-wrapper">
                             <!-- Product Image -->
                             <div class="product-img">
-                                <img src="../../assets/img/product-img/product1.jpg" alt="">
+                                <img src="../../../assets/img/product-img/product1.jpg" alt="">
                                 <!-- Hover Thumb -->
-                                <img class="hover-img" src="../../assets/img/product-img/product2.jpg" alt="">
+                                <img class="hover-img" src="../../../assets/img/product-img/product2.jpg" alt="">
                             </div>
 
                             <!-- Product Description -->
@@ -214,7 +214,7 @@
                                         <i class="fa fa-star" aria-hidden="true"></i>
                                     </div>
                                     <div class="cart">
-                                        <a href="cart.html" data-toggle="tooltip" data-placement="left" title="Add to Cart"><img src="../../assets/img/core-img/cart.png" alt=""></a>
+                                        <a href="cart.html" data-toggle="tooltip" data-placement="left" title="Add to Cart"><img src="../../../assets/img/core-img/cart.png" alt=""></a>
                                     </div>
                                 </div>
                             </div>
@@ -226,9 +226,9 @@
                         <div class="single-product-wrapper">
                             <!-- Product Image -->
                             <div class="product-img">
-                                <img src="../../assets/img/product-img/product2.jpg" alt="">
+                                <img src="../../../assets/img/product-img/product2.jpg" alt="">
                                 <!-- Hover Thumb -->
-                                <img class="hover-img" src="../../assets/img/product-img/product3.jpg" alt="">
+                                <img class="hover-img" src="../../../assets/img/product-img/product3.jpg" alt="">
                             </div>
 
                             <!-- Product Description -->
@@ -251,7 +251,7 @@
                                         <i class="fa fa-star" aria-hidden="true"></i>
                                     </div>
                                     <div class="cart">
-                                        <a href="cart.html" data-toggle="tooltip" data-placement="left" title="Add to Cart"><img src="../../assets/img/core-img/cart.png" alt=""></a>
+                                        <a href="cart.html" data-toggle="tooltip" data-placement="left" title="Add to Cart"><img src="../../../assets/img/core-img/cart.png" alt=""></a>
                                     </div>
                                 </div>
                             </div>
@@ -263,9 +263,9 @@
                         <div class="single-product-wrapper">
                             <!-- Product Image -->
                             <div class="product-img">
-                                <img src="../../assets/img/product-img/product3.jpg" alt="">
+                                <img src="../../../assets/img/product-img/product3.jpg" alt="">
                                 <!-- Hover Thumb -->
-                                <img class="hover-img" src="../../assets/img/product-img/product4.jpg" alt="">
+                                <img class="hover-img" src="../../../assets/img/product-img/product4.jpg" alt="">
                             </div>
 
                             <!-- Product Description -->
@@ -288,7 +288,7 @@
                                         <i class="fa fa-star" aria-hidden="true"></i>
                                     </div>
                                     <div class="cart">
-                                        <a href="cart.html" data-toggle="tooltip" data-placement="left" title="Add to Cart"><img src="../../assets/img/core-img/cart.png" alt=""></a>
+                                        <a href="cart.html" data-toggle="tooltip" data-placement="left" title="Add to Cart"><img src="../../../assets/img/core-img/cart.png" alt=""></a>
                                     </div>
                                 </div>
                             </div>
@@ -300,9 +300,9 @@
                         <div class="single-product-wrapper">
                             <!-- Product Image -->
                             <div class="product-img">
-                                <img src="../../assets/img/product-img/product4.jpg" alt="">
+                                <img src="../../../assets/img/product-img/product4.jpg" alt="">
                                 <!-- Hover Thumb -->
-                                <img class="hover-img" src="../../assets/img/product-img/product5.jpg" alt="">
+                                <img class="hover-img" src="../../../assets/img/product-img/product5.jpg" alt="">
                             </div>
 
                             <!-- Product Description -->
@@ -325,7 +325,7 @@
                                         <i class="fa fa-star" aria-hidden="true"></i>
                                     </div>
                                     <div class="cart">
-                                        <a href="cart.html" data-toggle="tooltip" data-placement="left" title="Add to Cart"><img src="../../assets/img/core-img/cart.png" alt=""></a>
+                                        <a href="cart.html" data-toggle="tooltip" data-placement="left" title="Add to Cart"><img src="../../../assets/img/core-img/cart.png" alt=""></a>
                                     </div>
                                 </div>
                             </div>
@@ -337,9 +337,9 @@
                         <div class="single-product-wrapper">
                             <!-- Product Image -->
                             <div class="product-img">
-                                <img src="../../assets/img/product-img/product5.jpg" alt="">
+                                <img src="../../../assets/img/product-img/product5.jpg" alt="">
                                 <!-- Hover Thumb -->
-                                <img class="hover-img" src="../../assets/img/product-img/product6.jpg" alt="">
+                                <img class="hover-img" src="../../../assets/img/product-img/product6.jpg" alt="">
                             </div>
 
                             <!-- Product Description -->
@@ -362,7 +362,7 @@
                                         <i class="fa fa-star" aria-hidden="true"></i>
                                     </div>
                                     <div class="cart">
-                                        <a href="cart.html" data-toggle="tooltip" data-placement="left" title="Add to Cart"><img src="../../assets/img/core-img/cart.png" alt=""></a>
+                                        <a href="cart.html" data-toggle="tooltip" data-placement="left" title="Add to Cart"><img src="../../../assets/img/core-img/cart.png" alt=""></a>
                                     </div>
                                 </div>
                             </div>
@@ -374,9 +374,9 @@
                         <div class="single-product-wrapper">
                             <!-- Product Image -->
                             <div class="product-img">
-                                <img src="../../assets/img/product-img/product6.jpg" alt="">
+                                <img src="../../../assets/img/product-img/product6.jpg" alt="">
                                 <!-- Hover Thumb -->
-                                <img class="hover-img" src="../../assets/img/product-img/product1.jpg" alt="">
+                                <img class="hover-img" src="../../../assets/img/product-img/product1.jpg" alt="">
                             </div>
 
                             <!-- Product Description -->
@@ -399,7 +399,7 @@
                                         <i class="fa fa-star" aria-hidden="true"></i>
                                     </div>
                                     <div class="cart">
-                                        <a href="cart.html" data-toggle="tooltip" data-placement="left" title="Add to Cart"><img src="../../assets/img/core-img/cart.png" alt=""></a>
+                                        <a href="cart.html" data-toggle="tooltip" data-placement="left" title="Add to Cart"><img src="../../../assets/img/core-img/cart.png" alt=""></a>
                                     </div>
                                 </div>
                             </div>
@@ -426,19 +426,19 @@
     <!-- ##### Main Content Wrapper End ##### -->
     
     <?php
-        include_once('../includes/customers_main_footer.php');
+        include_once('../../components/customers_main_footer.php');
     ?>
 
     <!-- ##### jQuery (Necessary for All JavaScript Plugins) ##### -->
-    <script src="../../assets/js/jquery/jquery-2.2.4.min.js"></script>
+    <script src="../../../assets/js/jquery/jquery-2.2.4.min.js"></script>
     <!-- Popper js -->
-    <script src="../../assets/js/popper.min.js"></script>
+    <script src="../../../assets/js/popper.min.js"></script>
     <!-- Bootstrap js -->
-    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../../assets/js/bootstrap.min.js"></script>
     <!-- Plugins js -->
-    <script src="../../assets/js/plugins.js"></script>
+    <script src="../../../assets/js/plugins.js"></script>
     <!-- Active js -->
-    <script src="../../assets/js/active.js"></script>
+    <script src="../../../assets/js/active.js"></script>
 
 </body>
 

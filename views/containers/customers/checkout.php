@@ -4,7 +4,7 @@
 <head>
     
     <?php
-        require_once('../includes/customers_main_header.php');
+        require_once('../../components/customers_main_header.php');
     ?>
 
 </head>
@@ -21,7 +21,7 @@
                     <div class="search-content">
                         <form action="#" method="get">
                             <input type="search" name="search" id="search" placeholder="Type your keyword...">
-                            <button type="submit"><img src="../../assets/img/core-img/search.png" alt=""></button>
+                            <button type="submit"><img src="../../../assets/img/core-img/search.png" alt=""></button>
                         </form>
                     </div>
                 </div>
@@ -34,7 +34,7 @@
     <div class="main-content-wrapper d-flex clearfix">
 
         <?php
-            require_once('../includes/customers_main_sidebar.php');
+            require_once('../../components/customers_main_sidebar.php');
         ?>
 
         <div class="cart-table-area section-padding-100">
@@ -121,7 +121,7 @@
                                 <!-- Paypal -->
                                 <div class="custom-control custom-checkbox mr-sm-2">
                                     <input type="checkbox" class="custom-control-input" id="paypal">
-                                    <label class="custom-control-label" for="paypal">Paypal <img class="ml-15" src="../../assets/img/core-img/paypal.png" alt=""></label>
+                                    <label class="custom-control-label" for="paypal">Paypal <img class="ml-15" src="../../../assets/img/core-img/paypal.png" alt=""></label>
                                 </div>
                             </div>
 
@@ -137,19 +137,19 @@
     <!-- ##### Main Content Wrapper End ##### -->
     
     <?php
-        include_once('../includes/customers_main_footer.php');
+        include_once('../../components/customers_main_footer.php');
     ?>
 
     <!-- ##### jQuery (Necessary for All JavaScript Plugins) ##### -->
-    <script src="../../assets/js/jquery/jquery-2.2.4.min.js"></script>
+    <script src="../../../assets/js/jquery/jquery-2.2.4.min.js"></script>
     <!-- Popper js -->
-    <script src="../../assets/js/popper.min.js"></script>
+    <script src="../../../assets/js/popper.min.js"></script>
     <!-- Bootstrap js -->
-    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../../assets/js/bootstrap.min.js"></script>
     <!-- Plugins js -->
-    <script src="../../assets/js/plugins.js"></script>
+    <script src="../../../assets/js/plugins.js"></script>
     <!-- Active js -->
-    <script src="../../assets/js/active.js"></script>
+    <script src="../../../assets/js/active.js"></script>
 
 </body>
 

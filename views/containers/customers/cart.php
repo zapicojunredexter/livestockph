@@ -4,7 +4,7 @@
 <head>
     
     <?php
-        require_once('../includes/customers_main_header.php');
+        require_once('../../components/customers_main_header.php');
     ?>
 
 </head>
@@ -21,7 +21,7 @@
                     <div class="search-content">
                         <form action="#" method="get">
                             <input type="search" name="search" id="search" placeholder="Type your keyword...">
-                            <button type="submit"><img src="../../assets/img/core-img/search.png" alt=""></button>
+                            <button type="submit"><img src="../../../assets/img/core-img/search.png" alt=""></button>
                         </form>
                     </div>
                 </div>
@@ -34,7 +34,7 @@
     <div class="main-content-wrapper d-flex clearfix">
         
         <?php
-            require_once('../includes/customers_main_sidebar.php');
+            require_once('../../components/customers_main_sidebar.php');
         ?>
 
         <div class="cart-table-area section-padding-100">
@@ -58,7 +58,7 @@
                                 <tbody>
                                     <tr>
                                         <td class="cart_product_img">
-                                            <a href="#"><img src="../../assets/img/bg-img/cart1.jpg" alt="Product"></a>
+                                            <a href="#"><img src="../../../assets/img/bg-img/cart1.jpg" alt="Product"></a>
                                         </td>
                                         <td class="cart_product_desc">
                                             <h5>White Modern Chair</h5>
@@ -79,7 +79,7 @@
                                     </tr>
                                     <tr>
                                         <td class="cart_product_img">
-                                            <a href="#"><img src="../../assets/img/bg-img/cart2.jpg" alt="Product"></a>
+                                            <a href="#"><img src="../../../assets/img/bg-img/cart2.jpg" alt="Product"></a>
                                         </td>
                                         <td class="cart_product_desc">
                                             <h5>Minimal Plant Pot</h5>
@@ -100,7 +100,7 @@
                                     </tr>
                                     <tr>
                                         <td class="cart_product_img">
-                                            <a href="#"><img src="../../assets/img/bg-img/cart3.jpg" alt="Product"></a>
+                                            <a href="#"><img src="../../../assets/img/bg-img/cart3.jpg" alt="Product"></a>
                                         </td>
                                         <td class="cart_product_desc">
                                             <h5>Minimal Plant Pot</h5>
@@ -142,19 +142,19 @@
     </div>
     <!-- ##### Main Content Wrapper End ##### -->
     <?php
-        include_once('../includes/customers_main_footer.php');
+        include_once('../../components/customers_main_footer.php');
     ?>
 
     <!-- ##### jQuery (Necessary for All JavaScript Plugins) ##### -->
-    <script src="../../assets/js/jquery/jquery-2.2.4.min.js"></script>
+    <script src="../../../assets/js/jquery/jquery-2.2.4.min.js"></script>
     <!-- Popper js -->
-    <script src="../../assets/js/popper.min.js"></script>
+    <script src="../../../assets/js/popper.min.js"></script>
     <!-- Bootstrap js -->
-    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../../assets/js/bootstrap.min.js"></script>
     <!-- Plugins js -->
-    <script src="../../assets/js/plugins.js"></script>
+    <script src="../../../assets/js/plugins.js"></script>
     <!-- Active js -->
-    <script src="../../assets/js/active.js"></script>
+    <script src="../../../assets/js/active.js"></script>
 
 </body>
 

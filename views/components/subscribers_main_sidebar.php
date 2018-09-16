@@ -1,6 +1,6 @@
 <div class="sidebar">
 
-    <!--<div class="sidebar" data-color="orange" data-image="../../assets/img/sidebar-5.jpg">-->
+    <!--<div class="sidebar" data-color="orange" data-image="../../../assets/img/sidebar-5.jpg">-->
 
     <!--
 
