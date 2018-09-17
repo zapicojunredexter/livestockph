@@ -1,3 +1,6 @@
+<?php
+    include_once('../../../utils/utils.php');
+?>
 <!-- Mobile Nav (max width 767px)-->
 <div class="mobile-nav">
     <!-- Navbar Brand -->
@@ -22,11 +25,11 @@
     <!-- Amado Nav -->
     <nav class="amado-nav">
         <ul>
-            <li class="active"><a href="index.php">Home</a></li>
-            <li><a href="shop.php">Shop</a></li>
-            <li><a href="product-details.php">Product</a></li>
-            <li><a href="cart.php">Cart</a></li>
-            <li><a href="checkout.php">Checkout</a></li>
+            <li class="<?php echo containsString($_SERVER['REQUEST_URI'], ["index.php"]) ? 'active':''; ?>"><a href="index.php">Home</a></li>
+            <li class="<?php echo containsString($_SERVER['REQUEST_URI'], ["shop.php"]) ? 'active':''; ?>"><a href="shop.php">Shop</a></li>
+            <li class="<?php echo containsString($_SERVER['REQUEST_URI'], ["product_details.php"]) ? 'active':''; ?>"><a href="product_details.php">Product</a></li>
+            <li class="<?php echo containsString($_SERVER['REQUEST_URI'], ["cart.php"]) ? 'active':''; ?>"><a href="cart.php">Cart</a></li>
+            <li class="<?php echo containsString($_SERVER['REQUEST_URI'], ["checkout.php"]) ? 'active':''; ?>"><a href="checkout.php">Checkout</a></li>
         </ul>
     </nav>
     <!-- Button Group -->
@@ -36,9 +39,9 @@
     </div>
     <!-- Cart Menu -->
     <div class="cart-fav-search mb-100">
-        <a href="cart.php" class="cart-nav"><img src="../../../assets/img/core-img/cart.png" alt=""> Cart <span>(0)</span></a>
-        <a href="#" class="fav-nav"><img src="../../../assets/img/core-img/favorites.png" alt=""> Favourite</a>
-        <a href="#" class="search-nav"><img src="../../../assets/img/core-img/search.png" alt=""> Search</a>
+        <a href="profile.php" class="cart-nav"><img src="../../../assets/img/core-img/cart.png" alt="">Profile</a>
+        <a href="#" class="search-nav"><img src="../../../assets/img/core-img/search.png" alt="">Search</a>
+        <a href="../../../controllers/generic/logout.php" class="fav-nav"><img src="../../../assets/img/core-img/favorites.png" alt=""> Logout </a>
     </div>
     <!-- Social Button -->
     <div class="social-info d-flex justify-content-between">

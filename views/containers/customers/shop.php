@@ -5,8 +5,41 @@
     
     <?php
         require_once('../../components/customers_main_header.php');
-    ?>
+        require_once('../../../utils/db_conn.php');
+        require_once('../../../utils/session_functions.php');
 
+        $categories = getRecords("SELECT * FROM categories");
+        $categoryId = null;
+        $breeds = [];
+        $breedIds = [];
+        if(isset($_GET['category'])){
+            $categoryId = $_GET['category'];
+            $breeds = getRecords("SELECT * FROM breeds WHERE CategoryId = $categoryId");
+        }
+        if(isset($_GET['breedIds'])){
+            $breedIds=$_GET['breedIds'];
+        }
+        $products = getRecords("SELECT * FROM categories category, breeds breed,
+        ownerbreeds obreed, livestocksuppliers supplier, obbatches batch WHERE
+        category.CategoryId = breed.CategoryId AND breed.BreedId = obreed.BreedId
+        AND obreed.SupplierNo = supplier.SupplierNo AND obreed.OwnerBreedId = batch.OwnerBreedId
+        AND breed.BreedId IN (".implode(',', array_map('intval', $breedIds)).")");
+
+        $minPrice = sizeof($products) > 0 ? round(min(array_column($products, 'PricePerKilo'))) : 0;
+        $maxPrice = sizeof($products) > 0 ? round(max(array_column($products, 'PricePerKilo'))) : 0;
+
+        $least = sizeof($products) > 0 ? min(array_column($products, 'DOB')) : date('Y-m-d');
+        $greatest = sizeof($products) > 0 ? max(array_column($products, 'DOB')) : date('Y-m-d');
+        $youngest = new DateTime($greatest);
+        $oldest = new DateTime($least);
+        $today = new DateTime(date('Y-m-d'));
+        
+        $minMonthTemp = $youngest->diff($today);
+        $maxMonthTemp = $oldest->diff($today);
+        
+        $minMonth = (($minMonthTemp->format('%y') * 12) + $minMonthTemp->format('%m'));
+        $maxMonth = (($maxMonthTemp->format('%y') * 12) + $minMonthTemp->format('%m'));
+    ?>
 </head>
 
 <body>
@@ -36,24 +69,23 @@
         <?php
             require_once('../../components/customers_main_sidebar.php');
         ?>
-
-        <div class="shop_sidebar_area" style="padding-top:20px;">
-
+        <form id="filterForm" class="shop_sidebar_area" style="padding-top:20px;">
+            <input type="hidden" name="category" value="<?php echo $categoryId?$categoryId:null; ?>">
             <!-- ##### Single Widget ##### -->
             <div class="widget catagory mb-50">
                 <!-- Widget Title -->
-                <h6 class="widget-title mb-30">Catagories</h6>
+                <h6 class="widget-title mb-30">Categories</h6>
 
                 <!--  Catagories  -->
                 <div class="catagories-menu">
                     <ul>
-                        <li class="active"><a href="#">Chairs</a></li>
-                        <li><a href="#">Beds</a></li>
-                        <li><a href="#">Accesories</a></li>
-                        <li><a href="#">Furniture</a></li>
-                        <li><a href="#">Home Deco</a></li>
-                        <li><a href="#">Dressings</a></li>
-                        <li><a href="#">Tables</a></li>
+                        <?php
+                            foreach($categories as $category){
+                                ?>
+                                    <li class="<?php echo (isset($_GET['category']) && ($_GET['category']==$category['CategoryId']))?'active':'';?>"><a href="?category=<?php echo $category['CategoryId']; ?>"><?php echo $category['CategoryDescription']; ?></a></li>
+                                <?php
+                            }
+                        ?>
                     </ul>
                 </div>
             </div>
@@ -65,49 +97,16 @@
 
                 <div class="widget-desc">
                     <!-- Single Form Check -->
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="amado">
-                        <label class="form-check-label" for="amado">Amado</label>
-                    </div>
-                    <!-- Single Form Check -->
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="ikea">
-                        <label class="form-check-label" for="ikea">Ikea</label>
-                    </div>
-                    <!-- Single Form Check -->
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="furniture">
-                        <label class="form-check-label" for="furniture">Furniture Inc</label>
-                    </div>
-                    <!-- Single Form Check -->
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="factory">
-                        <label class="form-check-label" for="factory">The factory</label>
-                    </div>
-                    <!-- Single Form Check -->
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="artdeco">
-                        <label class="form-check-label" for="artdeco">Artdeco</label>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ##### Single Widget ##### -->
-            <div class="widget color mb-50">
-                <!-- Widget Title -->
-                <h6 class="widget-title mb-30">Color</h6>
-
-                <div class="widget-desc">
-                    <ul class="d-flex">
-                        <li><a href="#" class="color1"></a></li>
-                        <li><a href="#" class="color2"></a></li>
-                        <li><a href="#" class="color3"></a></li>
-                        <li><a href="#" class="color4"></a></li>
-                        <li><a href="#" class="color5"></a></li>
-                        <li><a href="#" class="color6"></a></li>
-                        <li><a href="#" class="color7"></a></li>
-                        <li><a href="#" class="color8"></a></li>
-                    </ul>
+                    <?php
+                        foreach($breeds as $breed){
+                            ?>
+                                <div class="form-check">
+                                    <input name="breedIds[]" class="form-check-input" type="checkbox" value="<?php echo $breed['BreedId']?>">
+                                    <label class="form-check-label" for="amado"><?php echo $breed['BreedDescription']?></label>
+                                </div>
+                            <?php
+                        }
+                    ?>
                 </div>
             </div>
 
@@ -118,12 +117,12 @@
 
                 <div class="widget-desc">
                     <div class="slider-range">
-                        <div data-min="10" data-max="200" data-unit="PHP" class="slider-range-price ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" data-value-min="10" data-value-max="1000" data-label-result="">
+                        <div data-min="<?php echo $minPrice?>" data-max="<?php echo $maxPrice?>" data-unit="PHP" class="slider-range-price ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" data-value-min="<?php echo $minPrice?>" data-value-max="<?php echo $maxPrice?>" data-label-result="">
                             <div class="ui-slider-range ui-widget-header ui-corner-all"></div>
                             <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0"></span>
                             <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0"></span>
                         </div>
-                        <div class="range-price">PHP10 - PHP1000</div>
+                        <div class="range-price">PHP<?php echo $minPrice?> - PHP<?php echo $maxPrice?></div>
                     </div>
                 </div>
             </div>
@@ -134,17 +133,25 @@
 
                 <div class="widget-desc">
                     <div class="slider-range">
-                        <div data-min="10" data-max="200" data-unit="" class="slider-range-price ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" data-value-min="10" data-value-max="1000" data-label-result="">
+                        <div data-min="<?php echo $minMonth; ?>" data-max="<?php echo $maxMonth; ?>" data-unit="" class="slider-range-price ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" data-value-min="<?php echo $minMonth; ?>" data-value-max="<?php echo $maxMonth; ?>" data-label-result="">
                             <div class="ui-slider-range ui-widget-header ui-corner-all"></div>
                             <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0"></span>
                             <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0"></span>
                         </div>
-                        <div class="range-price">10 - 1000</div>
+                        <div class="range-price"><?php echo $minMonth; ?> - <?php echo $maxMonth; ?></div>
                     </div>
                 </div>
             </div>
-        </div>
-
+            
+            <button onclick="filterTags()" type="button" class="btn amado-btn">FILTER</button>
+        </form>
+        <script>
+            function filterTags(){
+                var data = $('#filterForm').serialize();
+                console.log(data);
+                window.location.href="shop.php?"+data;
+            }
+        </script>
         <div class="amado_product_area section-padding-100" style="padding-top:20px;">
             <div class="container-fluid">
                 <div class="row">
@@ -181,230 +188,58 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="row">
-
                     <!-- Single Product Area -->
-                    <div class="col-12 col-sm-6 col-md-12 col-xl-6">
-                        <div class="single-product-wrapper">
-                            <!-- Product Image -->
-                            <div class="product-img">
-                                <img src="../../../assets/img/product-img/product1.jpg" alt="">
-                                <!-- Hover Thumb -->
-                                <img class="hover-img" src="../../../assets/img/product-img/product2.jpg" alt="">
-                            </div>
+                    <?php
+                        foreach($products as $product){
+                            ?>
+                                <div class="col-12 col-sm-6 col-md-12 col-xl-6">
+                                    <div class="single-product-wrapper">
+                                        <!-- Product Image -->
+                                        <div class="product-img">
+                                            <img src="../../../assets/img/product-img/product1.jpg" alt="">
+                                            <!-- Hover Thumb -->
+                                            <img class="hover-img" src="../../../assets/img/product-img/product2.jpg" alt="">
+                                        </div>
 
-                            <!-- Product Description -->
-                            <div class="product-description d-flex align-items-center justify-content-between">
-                                <!-- Product Meta Data -->
-                                <div class="product-meta-data">
-                                    <div class="line"></div>
-                                    <p class="product-price">$180</p>
-                                    <a href="product-details.html">
-                                        <h6>Modern Chair</h6>
-                                    </a>
-                                </div>
-                                <!-- Ratings & Cart -->
-                                <div class="ratings-cart text-right">
-                                    <div class="ratings">
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="cart">
-                                        <a href="cart.html" data-toggle="tooltip" data-placement="left" title="Add to Cart"><img src="../../../assets/img/core-img/cart.png" alt=""></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                        <!-- Product Description -->
+                                        <div class="product-description d-flex align-items-center justify-content-between">
+                                            <!-- Product Meta Data -->
+                                            <div class="product-meta-data">
+                                                <div class="line"></div>
+                                                <a href="product_details.html" class="product-price"><?php echo $product['CategoryDescription']." - ".$product['BreedDescription'];?></a>
+                                                <a>
+                                                    <h6>PHP<?php echo $product['PricePerKilo'];?> per kg</h6>
+                                                    <h6>
+                                                        <?php
+                                                            $diff = abs(strtotime(date('Y-m-d')) - strtotime($product['DOB']));
 
-                    <!-- Single Product Area -->
-                    <div class="col-12 col-sm-6 col-md-12 col-xl-6">
-                        <div class="single-product-wrapper">
-                            <!-- Product Image -->
-                            <div class="product-img">
-                                <img src="../../../assets/img/product-img/product2.jpg" alt="">
-                                <!-- Hover Thumb -->
-                                <img class="hover-img" src="../../../assets/img/product-img/product3.jpg" alt="">
-                            </div>
-
-                            <!-- Product Description -->
-                            <div class="product-description d-flex align-items-center justify-content-between">
-                                <!-- Product Meta Data -->
-                                <div class="product-meta-data">
-                                    <div class="line"></div>
-                                    <p class="product-price">$180</p>
-                                    <a href="product-details.html">
-                                        <h6>Modern Chair</h6>
-                                    </a>
-                                </div>
-                                <!-- Ratings & Cart -->
-                                <div class="ratings-cart text-right">
-                                    <div class="ratings">
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="cart">
-                                        <a href="cart.html" data-toggle="tooltip" data-placement="left" title="Add to Cart"><img src="../../../assets/img/core-img/cart.png" alt=""></a>
+                                                            $years = floor($diff / (365*60*60*24));
+                                                            $months = floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
+                                                            $days = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
+                                                            if($years){
+                                                                echo $years.(($years>1)?" Years Old": " Years Old");
+                                                            }
+                                                            if($months){
+                                                                echo $months.(($months>1)?" Months Old": " Months Old");
+                                                            }
+                                                            echo $days.(($days>1)?" Days Old": " Day Old");
+                                                        ?>
+                                                    </h6>   
+                                                </a>
+                                            </div>
+                                            <!-- Ratings & Cart -->
+                                            <div class="ratings-cart text-right">
+                                                <div class="cart">
+                                                    <a href="cart.html" data-toggle="tooltip" data-placement="left" title="Add to Cart"><img src="../../../assets/img/core-img/cart.png" alt=""></a>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Single Product Area -->
-                    <div class="col-12 col-sm-6 col-md-12 col-xl-6">
-                        <div class="single-product-wrapper">
-                            <!-- Product Image -->
-                            <div class="product-img">
-                                <img src="../../../assets/img/product-img/product3.jpg" alt="">
-                                <!-- Hover Thumb -->
-                                <img class="hover-img" src="../../../assets/img/product-img/product4.jpg" alt="">
-                            </div>
-
-                            <!-- Product Description -->
-                            <div class="product-description d-flex align-items-center justify-content-between">
-                                <!-- Product Meta Data -->
-                                <div class="product-meta-data">
-                                    <div class="line"></div>
-                                    <p class="product-price">$180</p>
-                                    <a href="product-details.html">
-                                        <h6>Modern Chair</h6>
-                                    </a>
-                                </div>
-                                <!-- Ratings & Cart -->
-                                <div class="ratings-cart text-right">
-                                    <div class="ratings">
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="cart">
-                                        <a href="cart.html" data-toggle="tooltip" data-placement="left" title="Add to Cart"><img src="../../../assets/img/core-img/cart.png" alt=""></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Single Product Area -->
-                    <div class="col-12 col-sm-6 col-md-12 col-xl-6">
-                        <div class="single-product-wrapper">
-                            <!-- Product Image -->
-                            <div class="product-img">
-                                <img src="../../../assets/img/product-img/product4.jpg" alt="">
-                                <!-- Hover Thumb -->
-                                <img class="hover-img" src="../../../assets/img/product-img/product5.jpg" alt="">
-                            </div>
-
-                            <!-- Product Description -->
-                            <div class="product-description d-flex align-items-center justify-content-between">
-                                <!-- Product Meta Data -->
-                                <div class="product-meta-data">
-                                    <div class="line"></div>
-                                    <p class="product-price">$180</p>
-                                    <a href="product-details.html">
-                                        <h6>Modern Chair</h6>
-                                    </a>
-                                </div>
-                                <!-- Ratings & Cart -->
-                                <div class="ratings-cart text-right">
-                                    <div class="ratings">
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="cart">
-                                        <a href="cart.html" data-toggle="tooltip" data-placement="left" title="Add to Cart"><img src="../../../assets/img/core-img/cart.png" alt=""></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Single Product Area -->
-                    <div class="col-12 col-sm-6 col-md-12 col-xl-6">
-                        <div class="single-product-wrapper">
-                            <!-- Product Image -->
-                            <div class="product-img">
-                                <img src="../../../assets/img/product-img/product5.jpg" alt="">
-                                <!-- Hover Thumb -->
-                                <img class="hover-img" src="../../../assets/img/product-img/product6.jpg" alt="">
-                            </div>
-
-                            <!-- Product Description -->
-                            <div class="product-description d-flex align-items-center justify-content-between">
-                                <!-- Product Meta Data -->
-                                <div class="product-meta-data">
-                                    <div class="line"></div>
-                                    <p class="product-price">$180</p>
-                                    <a href="product-details.html">
-                                        <h6>Modern Chair</h6>
-                                    </a>
-                                </div>
-                                <!-- Ratings & Cart -->
-                                <div class="ratings-cart text-right">
-                                    <div class="ratings">
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="cart">
-                                        <a href="cart.html" data-toggle="tooltip" data-placement="left" title="Add to Cart"><img src="../../../assets/img/core-img/cart.png" alt=""></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Single Product Area -->
-                    <div class="col-12 col-sm-6 col-md-12 col-xl-6">
-                        <div class="single-product-wrapper">
-                            <!-- Product Image -->
-                            <div class="product-img">
-                                <img src="../../../assets/img/product-img/product6.jpg" alt="">
-                                <!-- Hover Thumb -->
-                                <img class="hover-img" src="../../../assets/img/product-img/product1.jpg" alt="">
-                            </div>
-
-                            <!-- Product Description -->
-                            <div class="product-description d-flex align-items-center justify-content-between">
-                                <!-- Product Meta Data -->
-                                <div class="product-meta-data">
-                                    <div class="line"></div>
-                                    <p class="product-price">$180</p>
-                                    <a href="product-details.html">
-                                        <h6>Modern Chair</h6>
-                                    </a>
-                                </div>
-                                <!-- Ratings & Cart -->
-                                <div class="ratings-cart text-right">
-                                    <div class="ratings">
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="cart">
-                                        <a href="cart.html" data-toggle="tooltip" data-placement="left" title="Add to Cart"><img src="../../../assets/img/core-img/cart.png" alt=""></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                            <?php
+                        }
+                    ?>
                 </div>
 
                 <div class="row">

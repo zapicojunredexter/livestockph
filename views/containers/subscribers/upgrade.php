@@ -4,6 +4,8 @@
 
     <?php
         require_once('../../components/subscribers_main_header.php');
+        require_once('../../../utils/db_conn.php');
+        require_once('../../../utils/session_functions.php');
     ?>
 
 </head>
