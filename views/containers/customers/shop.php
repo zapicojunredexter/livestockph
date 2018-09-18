@@ -9,36 +9,62 @@
         require_once('../../../utils/session_functions.php');
 
         $categories = getRecords("SELECT * FROM categories");
-        $categoryId = null;
-        $breeds = [];
-        $breedIds = [];
-        if(isset($_GET['category'])){
-            $categoryId = $_GET['category'];
-            $breeds = getRecords("SELECT * FROM breeds WHERE CategoryId = $categoryId");
-        }
-        if(isset($_GET['breedIds'])){
-            $breedIds=$_GET['breedIds'];
-        }
-        $products = getRecords("SELECT * FROM categories category, breeds breed,
-        ownerbreeds obreed, livestocksuppliers supplier, obbatches batch WHERE
-        category.CategoryId = breed.CategoryId AND breed.BreedId = obreed.BreedId
+        $categoryId = isset($_GET['category'])?$_GET['category']:null;
+        $breeds = isset($_GET['category'])
+            ?getRecords("SELECT * FROM breeds WHERE CategoryId = $categoryId")
+            :[];
+        $breedIds = isset($_GET['breedIds'])
+            ?$_GET['breedIds']
+            :[];
+        $sortBy = isset($_GET['sortBy'])
+            ?$_GET['sortBy']
+            :'PricePerKilo';
+        $sortOrder = isset($_GET['sortOrder'])
+            ?$_GET['sortOrder']
+            :'DESC';
+            
+        $minmax = getRecord("SELECT MAX(PricePerKilo) AS MaxPrice,MIN(PricePerKilo) AS MinPrice
+        ,MAX(FLOOR(DATEDIFF(CURDATE(),DOB)/30)) AS MaxMonth,MIN(FLOOR(DATEDIFF(CURDATE(),DOB)/30)) AS MinMonth
+        FROM obbatches");
+        $minPrice = round(sizeof($minmax) > 0 ? $minmax['MinPrice'] : 0);
+        $maxPrice = round(sizeof($minmax) > 0 ? $minmax['MaxPrice'] : 0);
+
+        $minMonth = sizeof($minmax) > 0 ? $minmax['MinMonth'] : 0;
+        $maxMonth = sizeof($minmax) > 0 ? $minmax['MaxMonth'] : 0;
+        
+        $minAgeRange = isset($_GET['minAgeRange'])
+            ?$_GET['minAgeRange']
+            :$minMonth;
+            
+        $maxAgeRange = isset($_GET['maxAgeRange'])
+            ?$_GET['maxAgeRange']
+            :$maxMonth;
+        
+        $minPriceRange = isset($_GET['minPriceRange'])
+            ?$_GET['minPriceRange']
+            :$minPrice;
+            
+        $maxPriceRange = isset($_GET['maxPriceRange'])
+            ?$_GET['maxPriceRange']
+            :$maxPrice;
+/*
+        $products = getRecords("SELECT *, FLOOR(DATEDIFF(CURDATE(),batch.DOB)/30) AS MonthsOld
+        FROM categories category, breeds breed, ownerbreeds obreed, livestocksuppliers supplier,
+        obbatches batch WHERE category.CategoryId = breed.CategoryId AND breed.BreedId = obreed.BreedId
         AND obreed.SupplierNo = supplier.SupplierNo AND obreed.OwnerBreedId = batch.OwnerBreedId
-        AND breed.BreedId IN (".implode(',', array_map('intval', $breedIds)).")");
-
-        $minPrice = sizeof($products) > 0 ? round(min(array_column($products, 'PricePerKilo'))) : 0;
-        $maxPrice = sizeof($products) > 0 ? round(max(array_column($products, 'PricePerKilo'))) : 0;
-
-        $least = sizeof($products) > 0 ? min(array_column($products, 'DOB')) : date('Y-m-d');
-        $greatest = sizeof($products) > 0 ? max(array_column($products, 'DOB')) : date('Y-m-d');
-        $youngest = new DateTime($greatest);
-        $oldest = new DateTime($least);
-        $today = new DateTime(date('Y-m-d'));
+        AND breed.BreedId IN (".implode(',', array_map('intval', $breedIds)).")
+        AND FLOOR(DATEDIFF(CURDATE(),batch.DOB)/30) >= $minAgeRange AND
+        FLOOR(DATEDIFF(CURDATE(),batch.DOB)/30) <= $maxAgeRange AND
+        batch.PricePerKilo >= $minPriceRange AND
+        batch.PricePerKilo <= $maxPriceRange
+        ORDER BY batch.$sortBy $sortOrder");
+*/
         
-        $minMonthTemp = $youngest->diff($today);
-        $maxMonthTemp = $oldest->diff($today);
-        
-        $minMonth = (($minMonthTemp->format('%y') * 12) + $minMonthTemp->format('%m'));
-        $maxMonth = (($maxMonthTemp->format('%y') * 12) + $minMonthTemp->format('%m'));
+        $products = getRecords("SELECT *, FLOOR(DATEDIFF(CURDATE(),batch.DOB)/30) AS MonthsOld
+        FROM categories category, breeds breed, ownerbreeds obreed, livestocksuppliers supplier,
+        obbatches batch WHERE category.CategoryId = breed.CategoryId AND breed.BreedId = obreed.BreedId
+        AND obreed.SupplierNo = supplier.SupplierNo AND obreed.OwnerBreedId = batch.OwnerBreedId");
+
     ?>
 </head>
 
@@ -93,7 +119,7 @@
             <!-- ##### Single Widget ##### -->
             <div class="widget brands mb-50">
                 <!-- Widget Title -->
-                <h6 class="widget-title mb-30">Brands</h6>
+                <h6 class="widget-title mb-30">Breeds</h6>
 
                 <div class="widget-desc">
                     <!-- Single Form Check -->
@@ -101,7 +127,7 @@
                         foreach($breeds as $breed){
                             ?>
                                 <div class="form-check">
-                                    <input name="breedIds[]" class="form-check-input" type="checkbox" value="<?php echo $breed['BreedId']?>">
+                                    <input <?php echo in_array($breed['BreedId'], $breedIds)? "checked": "" ?> name="breedIds[]" class="form-check-input" type="checkbox" value="<?php echo $breed['BreedId']?>">
                                     <label class="form-check-label" for="amado"><?php echo $breed['BreedDescription']?></label>
                                 </div>
                             <?php
@@ -113,32 +139,32 @@
             <!-- ##### Single Widget ##### -->
             <div class="widget price mb-50">
                 <!-- Widget Title -->
-                <h6 class="widget-title mb-30">Price</h6>
+                <h6 class="widget-title mb-30">Price (PHP)</h6>
 
                 <div class="widget-desc">
                     <div class="slider-range">
-                        <div data-min="<?php echo $minPrice?>" data-max="<?php echo $maxPrice?>" data-unit="PHP" class="slider-range-price ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" data-value-min="<?php echo $minPrice?>" data-value-max="<?php echo $maxPrice?>" data-label-result="">
+                        <div data-min="<?php echo $minPrice?>" data-max="<?php echo $maxPrice?>" data-unit="" class="slider-range-price ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" data-value-min="<?php echo $minPriceRange?>" data-value-max="<?php echo $maxPriceRange?>" data-label-result="">
                             <div class="ui-slider-range ui-widget-header ui-corner-all"></div>
                             <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0"></span>
                             <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0"></span>
                         </div>
-                        <div class="range-price">PHP<?php echo $minPrice?> - PHP<?php echo $maxPrice?></div>
+                        <div class="range-price" id="priceRange"><?php echo $minPriceRange?> - <?php echo $maxPriceRange?></div>
                     </div>
                 </div>
             </div>
             <!-- ##### Single Widget ##### -->
             <div class="widget price mb-50">
                 <!-- Widget Title -->
-                <h6 class="widget-title mb-30">Age</h6>
+                <h6 class="widget-title mb-30">Age (Months)</h6>
 
                 <div class="widget-desc">
                     <div class="slider-range">
-                        <div data-min="<?php echo $minMonth; ?>" data-max="<?php echo $maxMonth; ?>" data-unit="" class="slider-range-price ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" data-value-min="<?php echo $minMonth; ?>" data-value-max="<?php echo $maxMonth; ?>" data-label-result="">
+                        <div data-min="<?php echo $minMonth; ?>" data-max="<?php echo $maxMonth; ?>" data-unit="" class="slider-range-price ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" data-value-min="<?php echo $minAgeRange; ?>" data-value-max="<?php echo $maxAgeRange; ?>" data-label-result="">
                             <div class="ui-slider-range ui-widget-header ui-corner-all"></div>
                             <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0"></span>
                             <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0"></span>
                         </div>
-                        <div class="range-price"><?php echo $minMonth; ?> - <?php echo $maxMonth; ?></div>
+                        <div class="range-price" id="ageRange"><?php echo $minAgeRange; ?> - <?php echo $maxAgeRange; ?></div>
                     </div>
                 </div>
             </div>
@@ -146,10 +172,17 @@
             <button onclick="filterTags()" type="button" class="btn amado-btn">FILTER</button>
         </form>
         <script>
+            function getNumbersFromString(str){
+                var arrNumbers = str.split('-').map(Number);
+                return arrNumbers;
+            }
             function filterTags(){
-                var data = $('#filterForm').serialize();
-                console.log(data);
-                window.location.href="shop.php?"+data;
+                var filterData = $('#filterForm').serialize();
+                var sortData = $('#sortForm').serialize();
+                var ageRange = getNumbersFromString($('#ageRange').html());
+                var priceRange = getNumbersFromString($('#priceRange').html());
+
+                window.location.href="shop.php?"+filterData+"&"+sortData+"&minAgeRange="+ageRange[0]+"&maxAgeRange="+ageRange[1]+"&minPriceRange="+priceRange[0]+"&maxPriceRange="+priceRange[1];
             }
         </script>
         <div class="amado_product_area section-padding-100" style="padding-top:20px;">
@@ -162,29 +195,25 @@
                                 <p>Showing 1-8 0f 25</p>
                             </div>
                             <!-- Sorting -->
-                            <div class="product-sorting d-flex">
+                            <form id="sortForm" class="product-sorting d-flex">
                                 <div class="sort-by-date d-flex align-items-center mr-15">
                                     <p>Sort by</p>
-                                    <form action="#" method="get">
-                                        <select name="select" id="sortBydate">
-                                            <option value="value">Date</option>
-                                            <option value="value">Newest</option>
-                                            <option value="value">Popular</option>
-                                        </select>
-                                    </form>
+                                    <select name="sortBy" id="sortBydate">
+                                        <option <?php echo $sortBy=="PricePerKilo"?"selected":""; ?> value="PricePerKilo">Price</option>
+                                        <option <?php echo $sortBy=="DOB"?"selected":""; ?> value="DOB">Age</option>
+                                        <option <?php echo $sortBy=="Stock"?"selected":""; ?> value="Stock">Supply</option>
+                                    </select>
                                 </div>
                                 <div class="view-product d-flex align-items-center">
-                                    <form action="#" method="get">
-                                        <select name="select" id="viewProduct">
-                                            <option value="value">Increasing</option>
-                                            <option value="value">Decreasing</option>
-                                        </select>
-                                    </form>
+                                    <select name="sortOrder" id="viewProduct">
+                                        <option <?php echo $sortOrder=="ASC"?"selected":""; ?> value="ASC">Increasing</option>
+                                        <option <?php echo $sortOrder=="DESC"?"selected":""; ?> value="DESC">Decreasing</option>
+                                    </select>
                                 </div>
                                 <div class="view-product d-flex align-items-center">
-                                    <button class="btn amado-btn">SORT</button>
+                                    <button type="button" onclick="filterTags()" class="btn amado-btn">SORT</button>
                                 </div>
-                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -226,12 +255,13 @@
                                                             echo $days.(($days>1)?" Days Old": " Day Old");
                                                         ?>
                                                     </h6>   
+                                                    <h6>id ni <?php echo $product['BatchId']?>supplier ni <?php echo $product['SupplierNo']?>jaja<?php echo $product['Stock'];?> Stocks Left</h6>
                                                 </a>
                                             </div>
                                             <!-- Ratings & Cart -->
                                             <div class="ratings-cart text-right">
                                                 <div class="cart">
-                                                    <a href="cart.html" data-toggle="tooltip" data-placement="left" title="Add to Cart"><img src="../../../assets/img/core-img/cart.png" alt=""></a>
+                                                    <a onclick="addToCart(<?php echo $product['BatchId']?>,<?php echo $product['Stock']?>,<?php echo $product['SupplierNo']?>)" data-toggle="tooltip" data-placement="left" title="Add to Cart"><img src="../../../assets/img/core-img/cart.png" alt=""></a>
                                                 </div>
                                             </div>
                                         </div>
@@ -241,7 +271,66 @@
                         }
                     ?>
                 </div>
-
+                <script>
+                    function addToCart(BatchId, Stock, SupplierNo){
+                        addCartToSession(
+                            BatchId,
+                            Stock,
+                            SupplierNo);
+                    }
+                    function confirmChangeSupplier(
+                        BatchId,
+                        Stock,
+                        SupplierNo){
+                        var confirmClear = confirm("Are you sure you want to clear session items?");
+                        if(confirmClear){
+                            $.ajax({
+                                method: 'post',
+                                url: "../../../controllers/customers/empty_cart.php",
+                                success: function(result){
+                                    addCartToSession(
+                                        BatchId,
+                                        Stock,
+                                        SupplierNo
+                                    );
+                                },
+                                fail: function(result){
+                                    console.log(result);
+                                }
+                            });
+                        }
+                    }
+                    function addCartToSession(
+                        BatchId,
+                        Stock,
+                        SupplierNo){
+                            $.ajax({
+                                method: 'post',
+                                url: "../../../controllers/customers/add_to_cart.php",
+                                data: {
+                                    BatchId,
+                                    Stock,
+                                    SupplierNo,
+                                },
+                                success: function(result){
+                                    console.log(result);
+                                    var JSONResult = JSON.parse(result);
+                                    if(JSONResult.Message== 'Already selected Items from another supplier'){
+                                        confirmChangeSupplier(
+                                            BatchId,
+                                            Stock,
+                                            SupplierNo
+                                        );
+                                    }else{
+                                        alert(JSONResult.Message);
+                                    }
+                                },
+                                fail: function(result){
+                                    console.log(result);
+                                }
+                            });
+                    }
+                </script>
                 <div class="row">
                     <div class="col-12">
                         <!-- Pagination -->

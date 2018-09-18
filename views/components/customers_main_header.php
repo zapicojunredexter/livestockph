@@ -10,6 +10,7 @@
 <!-- Core Style CSS -->
 <link rel="stylesheet" href="../../../assets/css/core-style.css">
 <link rel="stylesheet" href="../../../assets/css/style.css">
+<link rel="stylesheet" href="../../../assets/css/progressbar.css">
 
 
 
@@ -18,5 +19,8 @@
 <style>
     .card{
         padding: 20px;
+    }
+    .form-control{
+        background-color:#ddd!important;
     }
 </style>
