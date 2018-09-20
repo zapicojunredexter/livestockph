@@ -18,8 +18,8 @@
 
 
 
-        $testCompanies = getRecords("SELECT *,(SELECT BreedDescription FROM breeds WHERE BreedId = category.CategoryId LIMIT 10) AS BreedTest FROM categories category");
-        print_r($testCompanies);
+        $testCompanies = getRecords("SELECT *,(SELECT BreedDescription FROM breeds WHERE BreedId = category.CategoryId LIMIT 10 ) AS BreedTest FROM categories category");
+
         return;
     ?>
 
