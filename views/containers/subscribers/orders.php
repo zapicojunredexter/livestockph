@@ -9,18 +9,14 @@
         $companyId = $_SESSION['account_company'];
         $orders = getRecords("SELECT * FROM reservations reservation,
         livestockbuyers buyer WHERE buyer.BuyerNo = reservation.BuyerNo
-        AND reservation.SupplierNo = $companyId");
+        AND reservation.SupplierNo = $companyId ORDER BY reservation.DateReserved DESC");
 
-        $productBatches = getRecords("SELECT * FROM obbatches batch, ownerbreeds ownerbreed, breeds breed, categories category,
+        $productBatches = getRecords("SELECT *, FLOOR(DATEDIFF(CURDATE(),batch.DOB)/30) AS MonthsOld FROM obbatches batch, ownerbreeds ownerbreed, breeds breed, categories category,
         livestocksuppliers supp WHERE category.CategoryId = breed.CategoryId AND breed.BreedId = ownerbreed.BreedId AND
         supp.SupplierNo = ownerbreed.SupplierNo AND ownerbreed.OwnerBreedId = batch.OwnerBreedId AND batch.Stock > 0
         AND supp.SupplierNo = $companyId");
-
-
-
         $testCompanies = getRecords("SELECT *,(SELECT BreedDescription FROM breeds WHERE BreedId = category.CategoryId LIMIT 10 ) AS BreedTest FROM categories category");
-
-        return;
+      
     ?>
 
 </head>
@@ -30,7 +26,7 @@
     <div class="modal" tabindex="-1" role="dialog" id="addWalkin">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                <form id="addProductsOfferedForm">
+                <form id="addWalkinOrderForm">
                     <div class="modal-header">
                         <h5 class="modal-title">ADD WALKINS</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -43,8 +39,8 @@
   
             <ul id="progressbar">
                 <li id="customerLis" class="active" onclick="changePage(0)">Customer Details</li>
-                <li id="orderLis" onclick="changePage(1)">Order Details</li>
-                <li id="checkoutLis" onclick="changePage(2)">Checkout</li>
+                <li id="checkoutLis" onclick="changePage(1)">Checkout</li>
+                <li id="orderLis" onclick="changePage(2)">Order Details</li>
             </ul>
                         <div id="customerDiv">
                             <div class="card">
@@ -53,16 +49,28 @@
                                 </div>
                                 <div class="content">  
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>FIRST NAME</label>
-                                                <input type="text" class="form-control">
+                                                <input name="BuyerFName" type="text" class="form-control">
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>LAST NAME</label>
-                                                <input name="ActualAmount" type="text" class="form-control">
+                                                <input name="BuyerLName" type="text" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>CONTACT NUMBER</label>
+                                                <input name="ContactNo" type="text" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label>STREET</label>
+                                                <input name="Street" type="text" class="form-control">
                                             </div>
                                         </div>
                                     </div>
@@ -70,19 +78,19 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>PROVINCE </label>
-                                                <input type="text" class="form-control">
+                                                <input name="Province" type="text" class="form-control">
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>CITY </label>
-                                                <input type="text" class="form-control">
+                                                <input name="City" type="text" class="form-control">
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>ZIP CODE</label>
-                                                <input type="text" class="form-control">
+                                                <input name="ZipCode" type="text" class="form-control">
                                             </div>
                                         </div>
                                     </div>
@@ -102,10 +110,58 @@
 
 
                         </div>
+
+                        
+                        <div id="checkoutDiv" style="display:none;">
+                        
+                            <div class="card">
+                                <div class="header">
+                                    <h4 class="title">Cart Details</h4>
+                                </div>
+                                <div class="content">  
+                                    <table class="table table-hover table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Item</th>
+                                                <th>Months Old</th>
+                                                <th>Price Per Kilo</th>
+                                                <th>Average Weight</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                                foreach($productBatches as $product){
+                                                    ?>
+                                                        <tr>
+                                                            <td><?php echo $product['CategoryDescription']." - ".$product['BreedDescription']?></td>
+                                                            <td><?php echo $product['MonthsOld']?></td>
+                                                            <td><?php echo $product['PricePerKilo']?></td>
+                                                            <td><?php echo $product['AverageWeight']?></td>
+                                                            <td>
+                                                                <input name="QuantityBatchId<?php echo $product['BatchId']?>" type="number" class="form-control pull-right" style="width:100px;">
+                                                            </td>
+                                                        </tr>
+                                                    <?php
+                                                }
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                        <div class="col-sm-6">
+                                            <button type="button" onclick="changePage(0)" class="btn btn-secondary" style="width:100%">Previous</button>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <button type="button" onclick="changePage(2)" class="btn btn-warning pull-right" style="width:100%">Next</button>
+                                            
+                                        </div>
+                                    </div>
+                        </div>
+
                         <div id="orderDiv" style="display:none;">
-
-
-
                             <div class="card">
                                 <div class="header">
                                     <h4 class="title">Reservation Details</h4>
@@ -121,7 +177,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>Status</label>
-                                                <input name="ActualAmount" type="text" class="form-control">
+                                                <input type="text" class="form-control">
                                             </div>
                                         </div>
                                     </div>
@@ -129,13 +185,13 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>Expected Amount </label>
-                                                <input type="text" class="form-control">
+                                                <input name="ExpectedAmount" type="text" class="form-control">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>Actual Amount </label>
-                                                <input type="text" class="form-control">
+                                                <input name="ActualAmount" type="text" class="form-control">
                                             </div>
                                         </div>
                                     </div>
@@ -143,45 +199,27 @@
                                         <div class="col-sm-12">
                                             <div class="form-group">
                                                 <label>Description </label>
-                                                <textarea class="form-control" style="margin-bottom:20px;height:80px;"></textarea>
+                                                <textarea name="ReservationDescription" class="form-control" style="margin-bottom:20px;height:80px;"></textarea>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-6">
-                                            <button type="button" onclick="changePage(0)" class="btn btn-secondary" style="width:100%">Previous</button>
+                                            <button type="button" onclick="changePage(1)" class="btn btn-secondary" style="width:100%">Previous</button>
                                         </div>
                                         <div class="col-sm-6">
-                                            <button type="button" onclick="changePage(2)" class="btn btn-warning pull-right" style="width:100%">Next</button>
-                                            
+                                            <button type="button" onclick="confirmCheckout()" class="btn btn-primary" style="width:100%">Save changes</button>
                                         </div>
                                     </div>
                                     <div class="clearfix"></div>
                                 </div>
                             </div>
 
-
-
-
-
-                        </div>
-                        <div id="checkoutDiv">
-                            <button type="button" onclick="addCartItem()">ADD</button>
-                            <div id="checkoutDivCartContainer"></div>
-                            <script>
-                                var productBatches = <?php echo json_encode($productBatches)?>;
-                                console.log(productBatches);
-                                function addCartItem(){
-                                    for(var i = 0; i<productBatches.length;i++){
-                                        $('#checkoutDivCartContainer').append("hehe");
-                                    }
-                                }
-                            </script>
                         </div>
                         
                         <script>
-                            var divs = ['customerDiv','orderDiv','checkoutDiv'];
-                            var lis = ['customerLis','orderLis','checkoutLis'];
+                            var divs = ['customerDiv','checkoutDiv','orderDiv'];
+                            var lis = ['customerLis','checkoutLis','orderLis'];
                             var currentPage = 0;
                             function changePage(page){
                                 if(page == 2 && currentPage == 0){
@@ -201,10 +239,33 @@
                                 }
                                 currentPage++;
                             }
+                            function confirmCheckout(){
+                                var addWalkinOrderDetails = $('#addWalkinOrderForm').serialize();
+                                var confirmClear = confirm("Are you sure you want to submit items?");
+                                if(confirmClear){
+                                    $.ajax({
+                                        method: 'post',
+                                        data: addWalkinOrderDetails,
+                                        url: "../../../controllers/subscribers/add_walkin_order.php",
+                                        success: function(result){
+                                            console.log(result);
+                                            var JSONResult = JSON.parse(result);
+                                            if(JSONResult.Status === "Success"){
+                                                alert("Order confirmed");
+                                                window.location.reload();
+                                            }else{
+                                                alert(JSONResult.Status);
+                                            }
+                                        },
+                                        fail: function(result){
+                                            console.log(result);
+                                        }
+                                    });
+                                }
+                            }
                         </script>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" onclick="" class="btn btn-primary">Save changes</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </form>
