@@ -5,6 +5,16 @@
     
     <?php
         require_once('../../components/customers_main_header.php');
+        require_once('../../../utils/db_conn.php');
+        require_once('../../../utils/session_functions.php');
+        $productId=$_GET['id'];
+        $product = getRecord("SELECT *, FLOOR(DATEDIFF(CURDATE(),batch.DOB)/30) AS MonthsOld
+        FROM categories category, breeds breed, ownerbreeds obreed, livestocksuppliers supplier,
+        obbatches batch WHERE category.CategoryId = breed.CategoryId AND breed.BreedId = obreed.BreedId
+        AND obreed.SupplierNo = supplier.SupplierNo AND obreed.OwnerBreedId = batch.OwnerBreedId
+        AND batch.BatchId = $productId");
+
+        print_r($product);
     ?>
 
 </head>
@@ -45,10 +55,8 @@
                     <div class="col-12">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb mt-50">
-                                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item"><a href="#">Furniture</a></li>
-                                <li class="breadcrumb-item"><a href="#">Chairs</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">white modern chair</li>
+                                <li class="breadcrumb-item"><a href="shop.php?category=<?php echo $product['CategoryId']?>"><?php echo $product['CategoryDescription']?></a></li>
+                                <li class="breadcrumb-item active"><a><?php echo $product['BreedDescription']?></a></li>
                             </ol>
                         </nav>
                     </div>
@@ -98,41 +106,28 @@
                             <!-- Product Meta Data -->
                             <div class="product-meta-data">
                                 <div class="line"></div>
-                                <p class="product-price">$180</p>
-                                <a href="product_details.html">
-                                    <h6>White Modern Chair</h6>
+                                <p class="product-price">PHP <?php echo $product['PricePerKilo']?> / kg</p>
+                                <a>
+                                    <h6><?php echo $product['CategoryDescription']." ".$product['BreedDescription']?></h6>
                                 </a>
-                                <!-- Ratings & Review -->
-                                <div class="ratings-review mb-15 d-flex align-items-center justify-content-between">
-                                    <div class="ratings">
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="review">
-                                        <a href="#">Write A Review</a>
-                                    </div>
-                                </div>
                                 <!-- Avaiable -->
-                                <p class="avaibility"><i class="fa fa-circle"></i> In Stock</p>
+                                <p class="avaibility"><i style="color:<?php echo $product['Stock']>0?"green":"red"?>;" class="fa fa-circle"></i>
+                                    <?php
+                                        if($product['Stock']>0){
+                                            echo $product['Stock']." left";
+                                        }else{
+                                            echo "Out of stock";
+                                        }
+                                    ?>
+                                </p>
                             </div>
 
                             <div class="short_overview my-5">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid quae eveniet culpa officia quidem mollitia impedit iste asperiores nisi reprehenderit consequatur, autem, nostrum pariatur enim?</p>
+                                <p><?php echo $product['Description']?></p>   
                             </div>
 
                             <!-- Add to Cart Form -->
                             <form class="cart clearfix" method="post">
-                                <div class="cart-btn d-flex mb-50">
-                                    <p>Qty</p>
-                                    <div class="quantity">
-                                        <span class="qty-minus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty ) &amp;&amp; qty &gt; 1 ) effect.value--;return false;"><i class="fa fa-caret-down" aria-hidden="true"></i></span>
-                                        <input type="number" class="qty-text" id="qty" step="1" min="1" max="300" name="quantity" value="1">
-                                        <span class="qty-plus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty )) effect.value++;return false;"><i class="fa fa-caret-up" aria-hidden="true"></i></span>
-                                    </div>
-                                </div>
                                 <button type="submit" name="addtocart" value="5" class="btn amado-btn">Add to cart</button>
                             </form>
 

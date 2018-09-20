@@ -17,6 +17,33 @@
 
 </head>
 <body>
+
+    <div class="modal" tabindex="-1" role="dialog" id="addImageModal">
+        <div class="modal-dialog" role="document">
+            <form target="_blank" action="../../../controllers/subscribers/add_product_image.php" method="post" enctype="multipart/form-data">
+                    
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload Documents</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                        Select image to upload:
+                        <input type="file" name="fileToUpload" id="fileToUpload" class="form-control">
+                        <input type="hidden" name="companyId" value="<?php echo $companyId; ?>">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" onclick="$('#addImageModal').modal('hide')" class="btn btn-primary">UPLOAD DOCUMENT</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
     <div class="wrapper">
         
         <?php
@@ -107,6 +134,7 @@
 
 
             <div class="content">
+            <button data-toggle="modal" data-target="#addImageModal">addd</button>
             <?php
                 if(isset($_GET['message']) && ($_GET['message'])=="Success"){
                     ?>

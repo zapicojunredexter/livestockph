@@ -39,7 +39,7 @@
 
         <!-- Product Catagories Area Start -->
         
-        <div class="products-catagories-area clearfix mt-70">
+        <div class="products-catagories-area clearfix mt-100">
             <div class="amado-pro-catagory clearfix">
 
                 <!-- Single Catagory -->

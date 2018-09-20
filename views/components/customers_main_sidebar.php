@@ -27,9 +27,7 @@
         <ul>
             <li class="<?php echo containsString($_SERVER['REQUEST_URI'], ["index.php"]) ? 'active':''; ?>"><a href="index.php">Home</a></li>
             <li class="<?php echo containsString($_SERVER['REQUEST_URI'], ["shop.php"]) ? 'active':''; ?>"><a href="shop.php">Shop</a></li>
-            <li class="<?php echo containsString($_SERVER['REQUEST_URI'], ["product_details.php"]) ? 'active':''; ?>"><a href="product_details.php">Product</a></li>
             <li class="<?php echo containsString($_SERVER['REQUEST_URI'], ["cart.php"]) ? 'active':''; ?>"><a href="cart.php">Cart</a></li>
-            <li class="<?php echo containsString($_SERVER['REQUEST_URI'], ["checkout.php"]) ? 'active':''; ?>"><a href="checkout.php">Checkout</a></li>
         </ul>
     </nav>
     <!-- Button Group -->

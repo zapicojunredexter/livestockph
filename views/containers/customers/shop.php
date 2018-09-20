@@ -236,7 +236,7 @@
                                             <!-- Product Meta Data -->
                                             <div class="product-meta-data">
                                                 <div class="line"></div>
-                                                <a href="product_details.html" class="product-price"><?php echo $product['CategoryDescription']." - ".$product['BreedDescription'];?></a>
+                                                <a href="product_details.php?id=<?php echo $product['BatchId']?>" class="product-price"><?php echo $product['CategoryDescription']." - ".$product['BreedDescription'];?></a>
                                                 <a>
                                                     <h6>PHP<?php echo $product['PricePerKilo'];?> per kg</h6>
                                                     <h6>

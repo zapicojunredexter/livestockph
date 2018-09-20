@@ -24,6 +24,7 @@
 <!-- Core Style CSS -->
 <link rel="stylesheet" href="../../../assets/css/core-style.css">
 <link rel="stylesheet" href="../../../assets/css/style.css">
+<link rel="stylesheet" href="../../../assets/css/progressbar.css">
 <style>
     .modal-backdrop {
         opacity:0.5 !important;

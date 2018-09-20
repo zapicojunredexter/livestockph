@@ -6,11 +6,211 @@
         require_once('../../components/subscribers_main_header.php');
         require_once('../../../utils/db_conn.php');
         require_once('../../../utils/session_functions.php');
+        $companyId = $_SESSION['account_company'];
+        $orders = getRecords("SELECT * FROM reservations reservation,
+        livestockbuyers buyer WHERE buyer.BuyerNo = reservation.BuyerNo
+        AND reservation.SupplierNo = $companyId");
+
+        $productBatches = getRecords("SELECT * FROM obbatches batch, ownerbreeds ownerbreed, breeds breed, categories category,
+        livestocksuppliers supp WHERE category.CategoryId = breed.CategoryId AND breed.BreedId = ownerbreed.BreedId AND
+        supp.SupplierNo = ownerbreed.SupplierNo AND ownerbreed.OwnerBreedId = batch.OwnerBreedId AND batch.Stock > 0
+        AND supp.SupplierNo = $companyId");
+
+
+
+        $testCompanies = getRecords("SELECT *,(SELECT BreedDescription FROM breeds WHERE BreedId = category.CategoryId LIMIT 10) AS BreedTest FROM categories category");
+        print_r($testCompanies);
+        return;
     ?>
 
 </head>
 <body>
 
+
+    <div class="modal" tabindex="-1" role="dialog" id="addWalkin">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <form id="addProductsOfferedForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title">ADD WALKINS</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                  
+
+  
+            <ul id="progressbar">
+                <li id="customerLis" class="active" onclick="changePage(0)">Customer Details</li>
+                <li id="orderLis" onclick="changePage(1)">Order Details</li>
+                <li id="checkoutLis" onclick="changePage(2)">Checkout</li>
+            </ul>
+                        <div id="customerDiv">
+                            <div class="card">
+                                <div class="header">
+                                    <h4 class="title">Customer Details</h4>
+                                </div>
+                                <div class="content">  
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>FIRST NAME</label>
+                                                <input type="text" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>LAST NAME</label>
+                                                <input name="ActualAmount" type="text" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>PROVINCE </label>
+                                                <input type="text" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>CITY </label>
+                                                <input type="text" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>ZIP CODE</label>
+                                                <input type="text" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <button type="button" onclick="changePage(1)" class="btn btn-warning pull-right" style="width:100%">Next</button>
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+
+
+
+
+                        </div>
+                        <div id="orderDiv" style="display:none;">
+
+
+
+                            <div class="card">
+                                <div class="header">
+                                    <h4 class="title">Reservation Details</h4>
+                                </div>
+                                <div class="content">  
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Date Reserved</label>
+                                                <input type="text" value="<?php date('Y-m-d')?>" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Status</label>
+                                                <input name="ActualAmount" type="text" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Expected Amount </label>
+                                                <input type="text" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Actual Amount </label>
+                                                <input type="text" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label>Description </label>
+                                                <textarea class="form-control" style="margin-bottom:20px;height:80px;"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <button type="button" onclick="changePage(0)" class="btn btn-secondary" style="width:100%">Previous</button>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <button type="button" onclick="changePage(2)" class="btn btn-warning pull-right" style="width:100%">Next</button>
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+
+
+
+
+
+                        </div>
+                        <div id="checkoutDiv">
+                            <button type="button" onclick="addCartItem()">ADD</button>
+                            <div id="checkoutDivCartContainer"></div>
+                            <script>
+                                var productBatches = <?php echo json_encode($productBatches)?>;
+                                console.log(productBatches);
+                                function addCartItem(){
+                                    for(var i = 0; i<productBatches.length;i++){
+                                        $('#checkoutDivCartContainer').append("hehe");
+                                    }
+                                }
+                            </script>
+                        </div>
+                        
+                        <script>
+                            var divs = ['customerDiv','orderDiv','checkoutDiv'];
+                            var lis = ['customerLis','orderLis','checkoutLis'];
+                            var currentPage = 0;
+                            function changePage(page){
+                                if(page == 2 && currentPage == 0){
+                                    return;
+                                }
+                                for(var index = 0;index<3;index++){
+                                    if(index == page){
+                                        $(`#${divs[index]}`).show();
+                                    }else{
+                                        $(`#${divs[index]}`).hide();
+                                    }
+                                    if(index <= page){
+                                        $(`#${lis[index]}`).addClass('active');
+                                    }else{
+                                        $(`#${lis[index]}`).removeClass('active');
+                                    }
+                                }
+                                currentPage++;
+                            }
+                        </script>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" onclick="" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 <div class="wrapper">
     
     <?php
@@ -99,66 +299,60 @@
         </nav>
 
         <div class="content">
+
+
+
+
+
+
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card">
                             <div class="header">
-                                <h4 class="title">Striped Table with Hover</h4>
-                                <p class="category">Here is a subtitle for this table</p>
+                                <h4 class="title" style="display:inline;">Order History</h4>
+                                <img data-toggle="modal" data-target="#addWalkin" src="../../../assets/img/icons/add_icon.gif" class="icon_small" alt="">
+                                <p class="category"></p>
                             </div>
                             <div class="content table-responsive table-full-width">
                                 <table class="table table-hover table-striped">
                                     <thead>
                                         <th>ID</th>
-                                    	<th>Name</th>
-                                    	<th>Salary</th>
-                                    	<th>Country</th>
-                                    	<th>City</th>
+                                    	<th>Customer Name</th>
+                                    	<th>Transaction Date</th>
+                                    	<th>Actual Amount</th>
+                                    	<th>Status</th>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                        	<td>1</td>
-                                        	<td>Dakota Rice</td>
-                                        	<td>$36,738</td>
-                                        	<td>Niger</td>
-                                        	<td>Oud-Turnhout</td>
-                                        </tr>
-                                        <tr>
-                                        	<td>2</td>
-                                        	<td>Minerva Hooper</td>
-                                        	<td>$23,789</td>
-                                        	<td>Curaçao</td>
-                                        	<td>Sinaai-Waas</td>
-                                        </tr>
-                                        <tr>
-                                        	<td>3</td>
-                                        	<td>Sage Rodriguez</td>
-                                        	<td>$56,142</td>
-                                        	<td>Netherlands</td>
-                                        	<td>Baileux</td>
-                                        </tr>
-                                        <tr>
-                                        	<td>4</td>
-                                        	<td>Philip Chaney</td>
-                                        	<td>$38,735</td>
-                                        	<td>Korea, South</td>
-                                        	<td>Overland Park</td>
-                                        </tr>
-                                        <tr>
-                                        	<td>5</td>
-                                        	<td>Doris Greene</td>
-                                        	<td>$63,542</td>
-                                        	<td>Malawi</td>
-                                        	<td>Feldkirchen in Kärnten</td>
-                                        </tr>
-                                        <tr>
-                                        	<td>6</td>
-                                        	<td>Mason Porter</td>
-                                        	<td>$78,615</td>
-                                        	<td>Chile</td>
-                                        	<td>Gloucester</td>
-                                        </tr>
+                                    <?php
+                                        foreach($orders as $order){
+                                            ?>
+                                            <tr>
+                                                <td><a href="order_details.php?id=<?php echo $order['ReservationNo']?>"><?php echo $order['ReservationNo']?></a></td>
+                                                <td><?php echo $order['BuyerLName'].", ".$order['BuyerFName']?></td>
+                                                <td><?php echo $order['DateReserved'] ?></td>
+                                                <td><?php echo $order['ActualAmount']?'PHP'.$order['ActualAmount']:'Not Paid' ?></td>
+                                                <td>
+                                                    <?php
+                                                        $status = $order['Status'];
+                                                        $toBeDelivered = $order['ToBeDelivered'];
+                                                        switch($status){
+                                                            case 0:
+                                                                if($toBeDelivered){
+                                                                    echo "<span class='badge badge-danger'>for Delivery</span>";
+                                                                }else{
+                                                                    echo "<span class='badge badge-info'>for Pickup</span>";
+                                                                }
+                                                                break;
+                                                            default:
+                                                                echo "<span class='badge badge-secondary'>Closed</span>";
+                                                        }
+                                                    ?>
+                                                </td>
+                                            </tr>
+                                            <?php
+                                        }
+                                    ?>
                                     </tbody>
                                 </table>
 
@@ -167,70 +361,6 @@
                     </div>
 
 
-                    <div class="col-md-12">
-                        <div class="card card-plain">
-                            <div class="header">
-                                <h4 class="title">Table on Plain Background</h4>
-                                <p class="category">Here is a subtitle for this table</p>
-                            </div>
-                            <div class="content table-responsive table-full-width">
-                                <table class="table table-hover">
-                                    <thead>
-                                        <th>ID</th>
-                                    	<th>Name</th>
-                                    	<th>Salary</th>
-                                    	<th>Country</th>
-                                    	<th>City</th>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                        	<td>1</td>
-                                        	<td>Dakota Rice</td>
-                                        	<td>$36,738</td>
-                                        	<td>Niger</td>
-                                        	<td>Oud-Turnhout</td>
-                                        </tr>
-                                        <tr>
-                                        	<td>2</td>
-                                        	<td>Minerva Hooper</td>
-                                        	<td>$23,789</td>
-                                        	<td>Curaçao</td>
-                                        	<td>Sinaai-Waas</td>
-                                        </tr>
-                                        <tr>
-                                        	<td>3</td>
-                                        	<td>Sage Rodriguez</td>
-                                        	<td>$56,142</td>
-                                        	<td>Netherlands</td>
-                                        	<td>Baileux</td>
-                                        </tr>
-                                        <tr>
-                                        	<td>4</td>
-                                        	<td>Philip Chaney</td>
-                                        	<td>$38,735</td>
-                                        	<td>Korea, South</td>
-                                        	<td>Overland Park</td>
-                                        </tr>
-                                        <tr>
-                                        	<td>5</td>
-                                        	<td>Doris Greene</td>
-                                        	<td>$63,542</td>
-                                        	<td>Malawi</td>
-                                        	<td>Feldkirchen in Kärnten</td>
-                                        </tr>
-                                        <tr>
-                                        	<td>6</td>
-                                        	<td>Mason Porter</td>
-                                        	<td>$78,615</td>
-                                        	<td>Chile</td>
-                                        	<td>Gloucester</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-
-                            </div>
-                        </div>
-                    </div>
 
 
                 </div>
