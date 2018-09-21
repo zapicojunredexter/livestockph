@@ -14,7 +14,7 @@
         AND obreed.SupplierNo = supplier.SupplierNo AND obreed.OwnerBreedId = batch.OwnerBreedId
         AND batch.BatchId = $productId");
 
-        print_r($product);
+        $images = getRecords("SELECT * FROM productimages WHERE BatchId = $productId");
     ?>
 
 </head>
@@ -48,59 +48,57 @@
         ?>
 
         <!-- Product Details Area Start -->
-        <div class="single-product-area clearfix">
+        <div class="single-product-area clearfix mt-100">
             <div class="container-fluid">
-
                 <div class="row">
-                    <div class="col-12">
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb mt-50">
-                                <li class="breadcrumb-item"><a href="shop.php?category=<?php echo $product['CategoryId']?>"><?php echo $product['CategoryDescription']?></a></li>
-                                <li class="breadcrumb-item active"><a><?php echo $product['BreedDescription']?></a></li>
-                            </ol>
-                        </nav>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-12 col-lg-7">
-                        <div class="single_product_thumb">
+                
+                    <div class="col-md-12 col-lg-7">
+                        <div class="single_product_thumb" style="margin-bottom:0px;">
                             <div id="product_details_slider" class="carousel slide" data-ride="carousel">
-                                <ol class="carousel-indicators">
-                                    <li class="active" data-target="#product_details_slider" data-slide-to="0" style="background-image: url(../../../assets/img/product-img/pro-big-1.jpg);">
-                                    </li>
-                                    <li data-target="#product_details_slider" data-slide-to="1" style="background-image: url(../../../assets/img/product-img/pro-big-2.jpg);">
-                                    </li>
-                                    <li data-target="#product_details_slider" data-slide-to="2" style="background-image: url(../../../assets/img/product-img/pro-big-3.jpg);">
-                                    </li>
-                                    <li data-target="#product_details_slider" data-slide-to="3" style="background-image: url(../../../assets/img/product-img/pro-big-4.jpg);">
-                                    </li>
-                                </ol>
                                 <div class="carousel-inner">
                                     <div class="carousel-item active">
-                                        <a class="gallery_img" href="../../../assets/img/product-img/pro-big-1.jpg">
-                                            <img class="d-block w-100" src="../../../assets/img/product-img/pro-big-1.jpg" alt="First slide">
-                                        </a>
-                                    </div>
-                                    <div class="carousel-item">
-                                        <a class="gallery_img" href="../../../assets/img/product-img/pro-big-2.jpg">
-                                            <img class="d-block w-100" src="../../../assets/img/product-img/pro-big-2.jpg" alt="Second slide">
-                                        </a>
-                                    </div>
-                                    <div class="carousel-item">
-                                        <a class="gallery_img" href="../../../assets/img/product-img/pro-big-3.jpg">
-                                            <img class="d-block w-100" src="../../../assets/img/product-img/pro-big-3.jpg" alt="Third slide">
-                                        </a>
-                                    </div>
-                                    <div class="carousel-item">
-                                        <a class="gallery_img" href="../../../assets/img/product-img/pro-big-4.jpg">
-                                            <img class="d-block w-100" src="../../../assets/img/product-img/pro-big-4.jpg" alt="Fourth slide">
+                                        <a class="gallery_img">
+                                            <?php
+                                                if(sizeof($images) > 0){
+                                                    ?>
+                                                    <img class="d-block w-100" src="../../../files/images/products/<?php echo $images[0]['ImagePath']?>" alt="First slide" />
+                                                    <?php
+                                                }else{
+                                                    ?>
+                                                    <img class="d-block w-100" src="../../../assets/img/defaults/no_image.jpg" alt="First slide" />
+                                                    <?php
+                                                }
+                                            ?>
                                         </a>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                        
+                            <?php
+                                if(sizeof($images) > 1){
+                                    for($i = 1;$i<sizeof($images);$i++){
+                                    ?>     
+                                        <div class="col-sm-3" style="padding:10px;">            
+                                            <a class="gallery_img">
+                                                <img class="d-block w-100" src="../../../files/images/products/<?php echo $images[$i]['ImagePath']?>" alt="First slide">
+                                            </a>
+                                        </div>
+                                    <?php
+                                    }
+                                }
+                            ?>
+                        </div>
                     </div>
+
+
+
+
+
+
+
+
                     <div class="col-12 col-lg-5">
                         <div class="single_product_desc">
                             <!-- Product Meta Data -->
@@ -128,7 +126,7 @@
 
                             <!-- Add to Cart Form -->
                             <form class="cart clearfix" method="post">
-                                <button type="submit" name="addtocart" value="5" class="btn amado-btn">Add to cart</button>
+                                <button onclick="addToCart(<?php echo $product['BatchId']?>,<?php echo $product['Stock']?>,<?php echo $product['SupplierNo']?>)" type="button" name="addtocart" value="5" class="btn amado-btn">Add to cart</button>
                             </form>
 
                         </div>
@@ -136,6 +134,66 @@
                 </div>
             </div>
         </div>
+            <script>
+                function addToCart(BatchId, Stock, SupplierNo){
+                    addCartToSession(
+                        BatchId,
+                        Stock,
+                        SupplierNo);
+                }
+                function confirmChangeSupplier(
+                    BatchId,
+                    Stock,
+                    SupplierNo){
+                    var confirmClear = confirm("Are you sure you want to clear session items?");
+                    if(confirmClear){
+                        $.ajax({
+                            method: 'post',
+                            url: "../../../controllers/customers/empty_cart.php",
+                            success: function(result){
+                                addCartToSession(
+                                    BatchId,
+                                    Stock,
+                                    SupplierNo
+                                );
+                            },
+                            fail: function(result){
+                                console.log(result);
+                            }
+                        });
+                    }
+                }
+                function addCartToSession(
+                    BatchId,
+                    Stock,
+                    SupplierNo){
+                        $.ajax({
+                            method: 'post',
+                            url: "../../../controllers/customers/add_to_cart.php",
+                            data: {
+                                BatchId,
+                                Stock,
+                                SupplierNo,
+                            },
+                            success: function(result){
+                                console.log(result);
+                                var JSONResult = JSON.parse(result);
+                                if(JSONResult.Message== 'Already selected Items from another supplier'){
+                                    confirmChangeSupplier(
+                                        BatchId,
+                                        Stock,
+                                        SupplierNo
+                                    );
+                                }else{
+                                    alert(JSONResult.Message);
+                                }
+                            },
+                            fail: function(result){
+                                console.log(result);
+                            }
+                        });
+                }
+            </script>
         <!-- Product Details Area End -->
     </div>
     <!-- ##### Main Content Wrapper End ##### -->

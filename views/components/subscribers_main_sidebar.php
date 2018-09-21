@@ -24,7 +24,7 @@
                     <p>Dashboard</p>
                 </a>
             </li>
-            <li class="<?php echo containsString($_SERVER['REQUEST_URI'], ["orders.php"]) ? 'active':''; ?>" style="width:100%">
+            <li class="<?php echo containsString($_SERVER['REQUEST_URI'], ["orders.php","order_details.php"]) ? 'active':''; ?>" style="width:100%">
                 <a href="orders.php">
                     <i class="pe-7s-note2"></i>
                     <p>Orders</p>

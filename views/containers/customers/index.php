@@ -5,6 +5,11 @@
 
     <?php
         require_once('../../components/customers_main_header.php');
+        require_once('../../../utils/session_functions.php');
+        require_once('../../../utils/db_conn.php');
+        $suppliers = getRecords("SELECT *,(SELECT ImagePath from productimages WHERE
+        SupplierId = supplier.SupplierNo LIMIT 1) AS ImagePath
+        FROM livestocksuppliers supplier");
     ?>
 
 </head>
@@ -39,27 +44,34 @@
 
         <!-- Product Catagories Area Start -->
         
-        <div class="products-catagories-area clearfix mt-100">
+        <div class="products-catagories-area clearfix">
+            <div style="padding:20px;">
+                <h3>TOP SUPPLIERS</h3>
+            </div>
             <div class="amado-pro-catagory clearfix">
+                <?php
+                    foreach($suppliers as $supplier){
+                        ?>
+                            <!-- Single Catagory -->
+                            <div class="single-products-catagory clearfix">
+                                <a href="supplier_details.php?id=<?php echo $supplier['SupplierNo']?>">
+                                    <img src="../../../files/images/products/<?php echo $supplier['ImagePath']?>" alt="">
+                                    <!-- Hover Content -->
+                                    <div class="hover-content">
+                                        <div class="line"></div>
+                                        <p></p>
+                                        <h4 style="color:#777"><?php echo $supplier['SupplierName']?></h4>
+                                    </div>
+                                </a>
+                            </div>
+                        <?php
+                    }
+                ?>
 
-                <!-- Single Catagory -->
-                <div class="single-products-catagory clearfix">
-                    <a href="shop.php">
-                        <img src="../../../assets/img/bg-img/1.jpg" alt="">
-                        <!-- Hover Content -->
-                        <div class="hover-content">
-                            <div class="line"></div>
-                            <p>From $180</p>
-                            <h4>Modern Chair</h4>
-                        </div>
-                    </a>
-                </div>
-
-                <!-- Single Catagory -->
+                <!-- Single Catagory
                 <div class="single-products-catagory clearfix">
                     <a href="shop.php">
                         <img src="../../../assets/img/bg-img/2.jpg" alt="">
-                        <!-- Hover Content -->
                         <div class="hover-content">
                             <div class="line"></div>
                             <p>From $180</p>
@@ -68,11 +80,9 @@
                     </a>
                 </div>
 
-                <!-- Single Catagory -->
                 <div class="single-products-catagory clearfix">
                     <a href="shop.php">
                         <img src="../../../assets/img/bg-img/3.jpg" alt="">
-                        <!-- Hover Content -->
                         <div class="hover-content">
                             <div class="line"></div>
                             <p>From $180</p>
@@ -81,11 +91,9 @@
                     </a>
                 </div>
 
-                <!-- Single Catagory -->
                 <div class="single-products-catagory clearfix">
                     <a href="shop.php">
                         <img src="../../../assets/img/bg-img/4.jpg" alt="">
-                        <!-- Hover Content -->
                         <div class="hover-content">
                             <div class="line"></div>
                             <p>From $180</p>
@@ -94,11 +102,9 @@
                     </a>
                 </div>
 
-                <!-- Single Catagory -->
                 <div class="single-products-catagory clearfix">
                     <a href="shop.php">
                         <img src="../../../assets/img/bg-img/5.jpg" alt="">
-                        <!-- Hover Content -->
                         <div class="hover-content">
                             <div class="line"></div>
                             <p>From $18</p>
@@ -107,11 +113,9 @@
                     </a>
                 </div>
 
-                <!-- Single Catagory -->
                 <div class="single-products-catagory clearfix">
                     <a href="shop.php">
                         <img src="../../../assets/img/bg-img/6.jpg" alt="">
-                        <!-- Hover Content -->
                         <div class="hover-content">
                             <div class="line"></div>
                             <p>From $320</p>
@@ -120,11 +124,9 @@
                     </a>
                 </div>
 
-                <!-- Single Catagory -->
                 <div class="single-products-catagory clearfix">
                     <a href="shop.php">
                         <img src="../../../assets/img/bg-img/7.jpg" alt="">
-                        <!-- Hover Content -->
                         <div class="hover-content">
                             <div class="line"></div>
                             <p>From $318</p>
@@ -133,11 +135,9 @@
                     </a>
                 </div>
 
-                <!-- Single Catagory -->
                 <div class="single-products-catagory clearfix">
                     <a href="shop.php">
                         <img src="../../../assets/img/bg-img/8.jpg" alt="">
-                        <!-- Hover Content -->
                         <div class="hover-content">
                             <div class="line"></div>
                             <p>From $318</p>
@@ -146,11 +146,9 @@
                     </a>
                 </div>
 
-                <!-- Single Catagory -->
                 <div class="single-products-catagory clearfix">
                     <a href="shop.html">
                         <img src="../../../assets/img/bg-img/9.jpg" alt="">
-                        <!-- Hover Content -->
                         <div class="hover-content">
                             <div class="line"></div>
                             <p>From $318</p>
@@ -158,6 +156,7 @@
                         </div>
                     </a>
                 </div>
+                 -->
             </div>
         </div>
         <!-- Product Catagories Area End -->

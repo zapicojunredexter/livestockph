@@ -59,11 +59,18 @@
         batch.PricePerKilo <= $maxPriceRange
         ORDER BY batch.$sortBy $sortOrder");
 */
-        
+        /*
         $products = getRecords("SELECT *, FLOOR(DATEDIFF(CURDATE(),batch.DOB)/30) AS MonthsOld
         FROM categories category, breeds breed, ownerbreeds obreed, livestocksuppliers supplier,
         obbatches batch WHERE category.CategoryId = breed.CategoryId AND breed.BreedId = obreed.BreedId
         AND obreed.SupplierNo = supplier.SupplierNo AND obreed.OwnerBreedId = batch.OwnerBreedId");
+       */ 
+        $products = getRecords("SELECT *, FLOOR(DATEDIFF(CURDATE(),batch.DOB)/30) AS MonthsOld,
+        (SELECT GROUP_CONCAT(ImagePath) FROM productimages WHERE BatchId = batch.BatchId) AS Image
+        FROM categories category, breeds breed, ownerbreeds obreed, livestocksuppliers supplier,
+        obbatches batch WHERE category.CategoryId = breed.CategoryId AND breed.BreedId = obreed.BreedId
+        AND obreed.SupplierNo = supplier.SupplierNo AND obreed.OwnerBreedId = batch.OwnerBreedId");
+        
 
     ?>
 </head>
@@ -226,9 +233,32 @@
                                     <div class="single-product-wrapper">
                                         <!-- Product Image -->
                                         <div class="product-img">
+
+                                        <?php
+                                            $images = explode(",",$product['Image']);
+                                            if(sizeof($images) === 1 && $images[0] === ""){
+                                                ?>
+                                                    <img src="../../../assets/img/defaults/no_image.jpg" alt="">
+                                                <?php
+                                            }else{
+                                                if(sizeof($images) === 1){
+                                                    ?>
+                                                        <img src="../../../files/images/products/<?php echo $images[0]?>">
+                                                    <?php
+                                                }else{
+                                                    ?>  
+                                                        <img src="../../../files/images/products/<?php echo $images[0]?>">
+                                                        <img class="hover-img" src="../../../files/images/products/<?php echo $images[1]?>">
+                                                    <?php
+                                                }
+                                            }
+                                            /*
+                                            
                                             <img src="../../../assets/img/product-img/product1.jpg" alt="">
                                             <!-- Hover Thumb -->
                                             <img class="hover-img" src="../../../assets/img/product-img/product2.jpg" alt="">
+                                            */
+                                        ?>
                                         </div>
 
                                         <!-- Product Description -->

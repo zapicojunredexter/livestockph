@@ -23,4 +23,26 @@
     .form-control{
         background-color:#ddd!important;
     }
+
+
+
+
+
+
+    #slideshow { 
+    margin: 50px auto; 
+    position: relative; 
+    width: 300px; 
+    height: 300px; 
+    padding: 0px; 
+    box-shadow: 0 0 0 rgba(0,0,0,0.4); 
+}
+
+#slideshow > div { 
+    position: absolute; 
+    top: 10px; 
+    left: 10px; 
+    right: 10px; 
+    bottom: 10px; 
+}
 </style>

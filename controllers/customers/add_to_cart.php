@@ -7,7 +7,6 @@
 
     $companyId = $_POST['SupplierNo'];
     $batchId = $_POST['BatchId'];
-
     $newCartItem = new stdClass();
     $newCartItem -> BatchId = $batchId;
     if(!isset($_SESSION['cart_items']) || ($_SESSION['cart_items'])==0){

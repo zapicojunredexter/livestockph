@@ -32,21 +32,30 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <h4>SELECT CATEGORY</h4>
+                        
                         <input type="hidden" name="SupplierNo" value="<?php echo $companyId?>" />
-                        <select onchange="onChangeCategory(this.value)" class="form-control">
-                            <option value=""></option>
-                            <?php
-                                foreach($categories as $category){
-                                    ?>
-                                <option value="<?php echo $category['CategoryId']?>"><?php echo $category['CategoryDescription']?></option>
+                        <div class="card">
+                            <div class="content">
+                                <div class="form-group">
+                                    <label>CATEGORY</label>
+                                <select onchange="onChangeCategory(this.value)" class="form-control">
+                                    <option value=""></option>
                                     <?php
-                                }
-                            ?>
-                        </select>
-                        <h4>SELECT BREED</h4>
-                        <select name="BreedId" id="selectBreed" class="form-control">
-                        </select>
+                                        foreach($categories as $category){
+                                            ?>
+                                        <option value="<?php echo $category['CategoryId']?>"><?php echo $category['CategoryDescription']?></option>
+                                            <?php
+                                        }
+                                    ?>
+                                </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>BREED</label>
+                                    <select name="BreedId" id="selectBreed" class="form-control">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" onclick="addProductsOffered()" class="btn btn-primary">Save changes</button>
@@ -262,7 +271,9 @@
                                                             <td><?php echo $product['CategoryDescription']?></td>
                                                             <td><?php echo $product['BreedDescription']?></td>
                                                             <td>
-                                                                <img onclick="addBatchToOwnerBreed(<?php echo $product['OwnerBreedId']?>)" src="../../../assets/img/icons/edit_icon.png" class="icon_small" alt="">
+                                                                <button onclick="addBatchToOwnerBreed(<?php echo $product['OwnerBreedId']?>)" type="button" rel="tooltip" title="Edit Task" class="btn btn-info btn-simple btn-xs">
+                                                                    <i class="fa fa-edit"></i>
+                                                                </button>
                                                             </td>
                                                         </tr>
                                                     <?php
@@ -294,21 +305,19 @@
                                                 <th>Price per Kilo</th>
                                                 <th>Average Weight</th>
                                                 <th>Date of birth</th>
-                                                <th></th>
                                             </thead>
                                             <tbody>
                                                 <?php
                                                     $i=0;
                                                     foreach($productBatches as $batch){
                                                         ?>
-                                                            <tr>
+                                                            <tr onclick="window.open('./manage_batch.php?id=<?php echo $batch['BatchId'];?>')">
                                                                 <td><?php echo ++$i; ?></td>
                                                                 <td><?php echo $batch['CategoryDescription'].' '.$batch['BreedDescription']; ?></td>
                                                                 <td><?php echo $batch['Stock']; ?></td>
                                                                 <td><?php echo $batch['PricePerKilo']; ?></td>
                                                                 <td><?php echo $batch['AverageWeight']; ?></td>
                                                                 <td><?php echo $batch['DOB']; ?></td>
-                                                                <td><a target="_blank" href="./manage_batch.php?id=<?php echo $batch['BatchId'];?>">Edit</a></td>
                                                             </tr>
                                                         <?php
                                                     }
@@ -339,10 +348,10 @@
     <script src="../../../assets/js/jquery.3.2.1.min.js" type="text/javascript"></script>
     <script src="../../../assets/js/bootstrap.min.js" type="text/javascript"></script>
     <script src="../../../assets/js/chartist.min.js"></script>
-    <script src="../../../assets/js/bootstrap-notify.js"></script>
-    <script src="../../../assets/js/light-bootstrap-dashboard.js?v=1.4.0"></script>
     <script src="../../../assets/js/demo.js"></script>
 
+    <script src="../../../assets/js/bootstrap-notify.js"></script>
+    <script src="../../../assets/js/light-bootstrap-dashboard.js?v=1.4.0"></script>
 
     <script>
         var categories = <?php echo json_encode($categories)?>;

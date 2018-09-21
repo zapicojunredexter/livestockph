@@ -10,9 +10,13 @@
         $companyId = $_SESSION['account_company'];
         $batchId = $_GET['id'];
 
+        $images = getRecords("SELECT * FROM productimages WHERE BatchId = $batchId");
+
         $product = getRecord("SELECT * FROM obbatches batch, ownerbreeds ownerbreed, breeds breed, categories category,
         livestocksuppliers supp WHERE category.CategoryId = breed.CategoryId AND breed.BreedId = ownerbreed.BreedId AND
         supp.SupplierNo = ownerbreed.SupplierNo AND ownerbreed.OwnerBreedId = batch.OwnerBreedId AND batch.BatchId = $batchId");
+    
+       
     ?>
 
 </head>
@@ -30,6 +34,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
+                <input type="text" name="BatchId" value="<?php echo $batchId?>">
                         Select image to upload:
                         <input type="file" name="fileToUpload" id="fileToUpload" class="form-control">
                         <input type="hidden" name="companyId" value="<?php echo $companyId; ?>">
@@ -143,6 +148,15 @@
                         <span><b> Success - </b> This is a regular notification made with ".alert-success"</span>
                     </div>
                     <?php
+                }else{
+                    if(isset($_GET['message'])){
+                        ?>
+                        <div class="alert alert-danger" id="errorMessage">
+                            <button type="button" onclick="$('#errorMessage').remove()" class="close">×</button>
+                            <span><b> Error - </b> This is a regular notification made with ".alert-success"</span>
+                        </div>
+                        <?php
+                    }
                 }
             ?>
                 <div class="single-product-area clearfix">
@@ -153,34 +167,38 @@
                                     <div id="product_details_slider" class="carousel slide" data-ride="carousel">
                                         <div class="carousel-inner">
                                             <div class="carousel-item active">
-                                                <a class="gallery_img" href="../../../assets/img/product-img/pro-big-1.jpg">
-                                                    <img class="d-block w-100" src="../../../assets/img/product-img/pro-big-1.jpg" alt="First slide">
+                                                <a class="gallery_img">
+                                                    <?php
+                                                        if(sizeof($images) > 0){
+                                                            ?>
+                                                            <img class="d-block w-100" src="../../../files/images/products/<?php echo $images[0]['ImagePath']?>" alt="First slide" />
+                                                            <?php
+                                                        }else{
+                                                            ?>
+                                                            <img class="d-block w-100" src="../../../assets/img/defaults/no_image.jpg" alt="First slide" />
+                                                            <?php
+                                                        }
+                                                    ?>
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-sm-3" style="padding:10px;">            
-                                        <a class="gallery_img">
-                                            <img class="d-block w-100" src="../../../assets/img/product-img/pro-big-1.jpg" alt="First slide">
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-3" style="padding:10px;">            
-                                        <a class="gallery_img">
-                                            <img class="d-block w-100" src="../../../assets/img/product-img/pro-big-1.jpg" alt="First slide">
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-3" style="padding:10px;">            
-                                        <a class="gallery_img">
-                                            <img class="d-block w-100" src="../../../assets/img/product-img/pro-big-1.jpg" alt="First slide">
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-3" style="padding:10px;">            
-                                        <a class="gallery_img">
-                                            <img class="d-block w-100" src="../../../assets/img/product-img/pro-big-1.jpg" alt="First slide">
-                                        </a>
-                                    </div>
+                                
+                                    <?php
+                                        if(sizeof($images) > 1){
+                                            for($i = 1;$i<sizeof($images);$i++){
+                                            ?>     
+                                                <div class="col-sm-3" style="padding:10px;">            
+                                                    <a class="gallery_img">
+                                                        <img class="d-block w-100" src="../../../files/images/products/<?php echo $images[$i]['ImagePath']?>" alt="First slide">
+                                                    </a>
+                                                </div>
+                                            <?php
+                                            }
+                                        }
+                                    ?>
                                 </div>
                             </div>
                             <div class="col-12 col-lg-5">

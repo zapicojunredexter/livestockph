@@ -25,6 +25,7 @@
 <link rel="stylesheet" href="../../../assets/css/core-style.css">
 <link rel="stylesheet" href="../../../assets/css/style.css">
 <link rel="stylesheet" href="../../../assets/css/progressbar.css">
+<link rel="stylesheet" href="../../../assets/css/toggleable.slider.css">
 <style>
     .modal-backdrop {
         opacity:0.5 !important;

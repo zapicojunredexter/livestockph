@@ -6,6 +6,17 @@
         require_once('../../components/subscribers_main_header.php');
         require_once('../../../utils/db_conn.php');
         require_once('../../../utils/session_functions.php');
+    
+        echo "zxc";
+        $companyId = $_SESSION['account_company'];
+        $toBeDelivered = getRecord("SELECT COUNT(SupplierNo) AS ToBeDelivered FROM reservations
+        WHERE Status = 0 AND ToBeDelivered = 1 AND SupplierNo = $companyId
+        GROUP BY SupplierNo");
+        $toBePickedUp = getRecord("SELECT COUNT(SupplierNo) AS ToBePickedUp FROM reservations
+        WHERE Status = 0 AND ToBeDelivered = 0 AND SupplierNo = $companyId
+        GROUP BY SupplierNo");
+        $forPickup = $toBePickedUp['ToBePickedUp'];
+        $forDelivery = $toBeDelivered['ToBeDelivered'];
     ?>
 
 </head>
@@ -337,17 +348,33 @@
     	$(document).ready(function(){
 
         	demo.initChartist();
+            <?php
+                if($forDelivery > 0) {
+                    ?>
+                    $.notify({
+                        icon: 'pe-7s-car',
+                        message: "<b><?php echo $forDelivery?> orders</b> for Delivery"
+                    },{
+                        type: 'danger',
+                        timer: 4000
+                    });
+                    <?php
+                }
+                if($forPickup > 0){
+                    ?>
+                    $.notify({
+                        icon: 'pe-7s-cash',
+                        message: "<b><?php echo $forPickup?> orders</b> for Pickup"
+        
+                    },{
+                        type: 'info',
+                        timer: 4000
+                    });
+                    <?php
+                    
+                }
+            ?>
 
-        	$.notify({
-            	icon: 'pe-7s-gift',
-            	message: "Welcome to <b>Light Bootstrap Dashboard</b> - a beautiful freebie for every web developer."
-
-            },{
-                type: 'info',
-                timer: 4000
-            });
-
-    	});
+        });
 	</script>
-
 </html>

@@ -376,20 +376,43 @@
                                 <p class="category"></p>
                             </div>
                             <div class="content table-responsive table-full-width">
+                                <script>
+                                    function sortOrderTable(sortBy){
+                                        return;
+                                        var tb = $('#ordertbody');
+                                        var rows = tb.find('tr');
+                                        var sortedArray = [];
+                                        rows.sort(function(a, b) {
+                                            var keyA = $(a).attr(sortBy);
+                                            var keyB = $(b).attr(sortBy);
+                                            return keyA - keyB;
+                                        });
+                                        $.each(rows, function(index, row) {
+                                            tb.append(row);
+                                        });
+                                    }
+                                </script>
                                 <table class="table table-hover table-striped">
                                     <thead>
-                                        <th>ID</th>
-                                    	<th>Customer Name</th>
-                                    	<th>Transaction Date</th>
-                                    	<th>Actual Amount</th>
-                                    	<th>Status</th>
+                                        <th onclick="sortOrderTable('id')">ID</th>
+                                    	<th onclick="sortOrderTable('customerName')">Customer Name</th>
+                                    	<th onclick="sortOrderTable('transactionDate')">Transaction Date</th>
+                                    	<th onclick="sortOrderTable('actualAmount')">Actual Amount</th>
+                                    	<th onclick="sortOrderTable('status')">Status</th>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="ordertbody">
                                     <?php
                                         foreach($orders as $order){
                                             ?>
-                                            <tr>
-                                                <td><a href="order_details.php?id=<?php echo $order['ReservationNo']?>"><?php echo $order['ReservationNo']?></a></td>
+                                            <tr
+                                                id="<?php echo $order['ReservationNo'];?>"
+                                                customerName="<?php echo $order['BuyerLName'].$order['BuyerFName'];?>"
+                                                transactionDate="<?php echo $order['DateReserved'];?>"
+                                                actualAmount="<?php echo $order['ActualAmount'];?>"
+                                                status="<?php echo $order['Status'];?>"
+                                                onclick="window.open('order_details.php?id=<?php echo $order['ReservationNo']?>')"
+                                            >
+                                                <td><a href=""><?php echo $order['ReservationNo']?></a></td>
                                                 <td><?php echo $order['BuyerLName'].", ".$order['BuyerFName']?></td>
                                                 <td><?php echo $order['DateReserved'] ?></td>
                                                 <td><?php echo $order['ActualAmount']?'PHP'.$order['ActualAmount']:'Not Paid' ?></td>

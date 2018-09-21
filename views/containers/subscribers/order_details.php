@@ -217,34 +217,63 @@
                                 <h4 class="title">Cart Details</h4>
                             </div>
                             <div class="content">
-                                <table class="table table-hover table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th>Item</th>
-                                            <th>Quantity</th>
-                                            <th>Price/kg</th>
-                                            <th>Average Weight</th>
-                                            <th>Months Old</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                            foreach($orderDetails as $detail){
-                                                ?>
-                                                <tr>
-                                                    <td>IMG</td>
-                                                    <td><?php echo $detail['CategoryDescription']." ".$detail['BreedDescription']?></td>
-                                                    <td><?php echo $detail['Quantity']." out of ".$detail['Stock']?></td>
-                                                    <td><?php echo $detail['PricePerKilo']?></td>
-                                                    <td><?php echo $detail['AverageWeight']?></td>
-                                                    <td><?php echo $detail['MonthsOld']?></td>
-                                                </tr>
-                                                <?php
+                                <form id="editCartDetails">
+                                    <table class="table table-hover table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>Item</th>
+                                                <th>Quantity</th>
+                                                <th>Price/kg</th>
+                                                <th>Average Weight</th>
+                                                <th>Months Old</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                                foreach($orderDetails as $detail){
+                                                    ?>
+                                                    <tr>
+                                                        <td>IMG</td>
+                                                        <td><?php echo $detail['CategoryDescription']." ".$detail['BreedDescription']?></td>
+                                                        <td>
+                                                            <input min="0" max="<?php echo $detail['Stock']?>" name="<?php echo $detail['ReservDetailNo']?>" type="number" value="<?php echo $detail['Quantity']?>" class="form-control" style="width:80px;">
+                                                            <?php //echo $detail['Quantity']." out of ".$detail['Stock']?>
+                                                        </td>
+                                                        <td><?php echo $detail['PricePerKilo']?></td>
+                                                        <td><?php echo $detail['AverageWeight']?></td>
+                                                        <td><?php echo $detail['MonthsOld']?></td>
+                                                    </tr>
+                                                    <?php
+                                                }
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                    <input type="button" value="EDIT" onclick="editCartDetails()">
+                                </form>
+                                <script>
+                                    function editCartDetails(){
+                                                                        
+                                        $.ajax({
+                                            method: 'post',
+                                            url: "../../../controllers/subscribers/edit_reservation_details.php",
+                                            data: $('#editCartDetails').serialize(),
+                                            success: function(result){
+                                                console.log(result);
+                                                var jsonResult = JSON.parse(result);
+                                                if(jsonResult.Status=='Success'){
+                                                    alert("Successfully edited");
+                                                    window.location.reload();
+                                                }else{
+                                                    alert(jsonResult.Status);
+                                                }
+                                            },
+                                            fail: function(result){
+                                                console.log(result);
                                             }
-                                        ?>
-                                    </tbody>
-                                </table>
+                                        });
+                                    }
+                                </script>
                             </div>
                         </div>
                     </div>

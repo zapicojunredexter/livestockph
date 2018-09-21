@@ -13,7 +13,7 @@
     </div>
 </div>
 <!-- Header Area Start -->
-<header class="header-area clearfix">
+<header class="header-area clearfix" style="background-color:red;color:white;">
     <!-- Close Icon -->
     <div class="nav-close">
         <i class="fa fa-close" aria-hidden="true"></i>
@@ -31,9 +31,7 @@
         </ul>
     </nav>
     <!-- Button Group -->
-    <div class="amado-btn-group mt-30 mb-100">
-        <a href="#" class="btn amado-btn mb-15">%Discount%</a>
-        <a href="#" class="btn amado-btn active">New this week</a>
+    <div class="amado-btn-group mt-30 mb-100">  
     </div>
     <!-- Cart Menu -->
     <div class="cart-fav-search mb-100">

@@ -243,6 +243,65 @@
                     <div class="col-md-4">
                         <div class="card">
                             <div class="header">
+                                <h4 class="title" style="display:inline;">Delivery Settings</h4>
+                            </div>
+                            <div class="content">
+                                
+                                <form id="deliverySettingsForm">
+                                    <div class="row" style="padding:10px 20px 10px 20px;">
+                                        <label class="switch" style="margin-right: 10px;">
+                                            <input name="AllowDelivery" onchange="onToggleDelivery(this)" type="checkbox" <?php echo ($user['DeliveryFee'] && $user['DeliveryDays']) ? "checked":"";?>>
+                                            <span class="slider round"></span>
+                                        </label>Allow Delivery?
+                                    </div>
+                                    <div id="toggleableSettings" style="display:<?php echo ($user['DeliveryFee'] && $user['DeliveryDays']) ? "block":"none";?>">
+                                        <div class="form-group">
+                                            <label>Delivery Fee</label>
+                                            <input name="DeliveryFee" type="text" class="form-control" placeholder="PHP 0.00" value="<?php echo $user['DeliveryFee']; ?>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>expected days for delivery</label>
+                                            
+                                            <input type="number" name="DeliveryDays" class="form-control" placeholder="0 days" value="<?php echo $user['DeliveryDays']; ?>">
+                                            
+                                        </div>
+                                    </div>    
+                                    <input onclick="editSettings()" type="button" value="Edit">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                        function onToggleDelivery(toggle){
+                            $('#toggleableSettings').toggle();
+                            if(toggle.checked){
+                            }else{
+                            }
+                        }
+                        function editSettings(){
+                            $.ajax({
+                                method: 'post',
+                                url: "../../../controllers/subscribers/edit_settings.php",
+                                data: $('#deliverySettingsForm').serialize(),
+                                success: function(result){
+                                    console.log(result);
+                                    var jsonResult = JSON.parse(result);
+                                    if(jsonResult.Status=='Success'){
+                                        alert("successfully edited");
+                                        window.location.reload();
+                                    }else{
+                                        alert(jsonResult.Status);
+                                    }
+                                },
+                                fail: function(result){
+                                    console.log(result);
+                                }
+                            });
+                        }
+                    </script>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="header">
                                 <h4 class="title" style="display:inline;">Company Documents</h4>
                                 <img data-toggle="modal" data-target="#addDocumentsModal" src="../../../assets/img/icons/add_icon.gif" class="icon_small" alt="add">
                             </div>
@@ -259,7 +318,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-md-8">
                         <div class="card">
                             <div class="header">
                                 <h4 class="title" style="display:inline;">Company Employees</h4>

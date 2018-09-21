@@ -13,15 +13,15 @@
         if($cartItems){
             $batchIds = array_column($cartItems, 'BatchId');
             $companyId = $_SESSION['cart_company'];
-            $batchItemsFromCart = getRecords("SELECT *
+            $batchItemsFromCart = getRecords("SELECT *,
+            (SELECT ImagePath FROM productimages WHERE BatchId = batch.BatchId LIMIT 1) AS Image
             FROM categories category, breeds breed, ownerbreeds obreed, livestocksuppliers supplier,
             obbatches batch WHERE category.CategoryId = breed.CategoryId AND breed.BreedId = obreed.BreedId
             AND obreed.SupplierNo = supplier.SupplierNo AND obreed.OwnerBreedId = batch.OwnerBreedId AND
             batch.BatchId IN (".implode(',', array_map('intval', $batchIds)).")");
 
             $companyDetails = getRecord("SELECT * FROM livestocksuppliers WHERE SupplierNo = $companyId");
-            print_r($companyDetails);
-
+            
         }
         $isCartFilled = (isset($_SESSION['cart_items']) && $_SESSION['cart_items']>0);  
     ?>
@@ -129,7 +129,10 @@
                                                     ?>    
                                                         <tr>
                                                             <td class="cart_product_img">
-                                                                <a href="#"><img src="../../../assets/img/bg-img/cart1.jpg" alt="Product"></a>
+                                                                <a href="#">
+                                                                    
+                                                                    <img src="<?php echo $product['Image'] ? "../../../files/images/products/".$product['Image'] : "../../../assets/img/defaults/no_image.jpg"?>" alt="Product">
+                                                                </a>
                                                             </td>
                                                             <td class="qty">
                                                                 <div class="qty-btn d-flex">
@@ -145,10 +148,10 @@
                                                                 <h5><?php echo $product['CategoryDescription']." - ".$product['BreedDescription']; ?></h5>
                                                             </td>
                                                             <td class="cart_product_desc">
-                                                                <h5><?php echo $product['PricePerKilo']; ?></h5>
+                                                                <h5>PHP <?php echo $product['PricePerKilo']; ?></h5>
                                                             </td>
                                                             <td class="cart_product_desc">
-                                                                <h5><?php echo $product['AverageWeight']; ?></h5>
+                                                                <h5><?php echo $product['AverageWeight']; ?>kg</h5>
                                                             </td>
                                                         </tr>
                                                     <?php
@@ -197,8 +200,8 @@
                     </div>
                     <div class="col-12 col-lg-3">
                         <div class="cart-btn mt-50">
-                            <button style="background-color:red;margin-bottom:10px;" onclick="clearCart()" <?php echo $isCartFilled?"":"disabled"?> class="btn amado-btn w-100">CLEAR CART</button>
-                            <button onclick="changePage(1)" class="btn amado-btn w-100" <?php echo $isCartFilled?"":"disabled"?>>Proceed to Checkout</button>
+                            <button style="background-color:red;margin-bottom:10px;" onclick="clearCart()" <?php echo $isCartFilled?"":"disabled"?> class="btn amado-btn w-100">Clear Cart</button>
+                            <button onclick="changePage(1)" class="btn amado-btn w-100" <?php echo $isCartFilled?"":"disabled"?>>Proceed to Next</button>
                         </div>
                         <div class="cart-summary" style="margin-top:50px;">
                             <h5>Cart Total</h5>
