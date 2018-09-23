@@ -27,6 +27,9 @@
 <link rel="stylesheet" href="../../../assets/css/progressbar.css">
 <link rel="stylesheet" href="../../../assets/css/toggleable.slider.css">
 <style>
+.ct-label {
+    font-size: 15px !important;
+}
     .modal-backdrop {
         opacity:0.5 !important;
     }
