@@ -20,8 +20,16 @@
         $pendingTransactions = getRecords("SELECT * FROM reservations reservation, livestockbuyers buyer
         WHERE buyer.BuyerNo = reservation.BuyerNo AND reservation.status = 0 AND reservation.SupplierNo = $companyId");
 
+    
+        $report = getRecords("SELECT (details.ReservDetailNo) as COUNT,
+        breed.BreedDescription FROM
+        reservationdetails details, obbatches batch, ownerbreeds obreed,
+        breeds breed,categories category WHERE
+        batch.BatchId = details.BatchId AND batch.OwnerBreedId = obreed.OwnerBreedId
+        AND obreed.BreedId = breed.BreedId AND breed.CategoryId = category.CategoryId
+        GROUP BY breed.BreedDescription
+        ");    
     ?>
-
 </head>
 <body>
 
@@ -175,6 +183,7 @@
                                 <div id="chartPreferences" class="ct-chart ct-perfect-fourth"></div>
 
                                 <div class="footer">
+                                                <!--
                                     <div class="legend">
                                         <i class="fa fa-circle text-info"></i> Open
                                         <i class="fa fa-circle text-danger"></i> Bounce
@@ -185,6 +194,7 @@
                                     <div class="stats">
                                         <i class="fa fa-clock-o"></i> Campaign sent 2 days ago
                                     </div>
+                                    --.>
                                 </div>
                             </div>
                         </div>
@@ -273,6 +283,7 @@
 
 	<script type="text/javascript">
     	$(document).ready(function(){
+            var data = (<?php echo json_encode($report)?>);
             var dataPreferences = {
                 series: [
                     [25, 30, 20, 25]
@@ -293,8 +304,8 @@
             Chartist.Pie('#chartPreferences', dataPreferences, optionsPreferences);
 
             Chartist.Pie('#chartPreferences', {
-            labels: [' ',' ',' ',' '],
-            series: [50, 25, 12,13]
+            labels: data.map(item => item.BreedDescription),
+            series: data.map(item => item.COUNT)
             });
         	// demo.initChartist();
             <?php
