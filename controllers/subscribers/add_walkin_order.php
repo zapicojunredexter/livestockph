@@ -37,10 +37,11 @@
             $expectedAmount = $_POST['ExpectedAmount'];
             $actualAmount = $_POST['ActualAmount'];
             $description = $_POST['ReservationDescription'];
+            $closedBy = $_POST['ClosedBy'];
             
             $reservationId = setRecord("INSERT INTO reservations
-            (Status,BuyerNo,ToBeDelivered,ExpectedAmount,ActualAmount,SupplierNo,ReservationDescription) VALUES 
-            ($status,$buyerNo,$toBeDelivered,$expectedAmount,$actualAmount,$supplierNo,'$description')");
+            (Status,BuyerNo,ToBeDelivered,ExpectedAmount,ActualAmount,SupplierNo,ReservationDescription,ClosedBy) VALUES 
+            ($status,$buyerNo,$toBeDelivered,$expectedAmount,$actualAmount,$supplierNo,'$description',$closedBy)");
     
             foreach($cart as $cartItem){
                 setRecord("INSERT INTO reservationdetails (Quantity,BatchId,OrderNo) VALUES 

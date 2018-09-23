@@ -108,6 +108,7 @@
                     <div class="content">
                         <div class="row">
                             <div class="col-md-6">
+                                
                                 <h5>Notifications Style</h5>
                                 <div class="alert alert-info">
                                     <span>This is a plain notification</span>
@@ -116,6 +117,10 @@
                                     <button type="button" aria-hidden="true" class="close">×</button>
                                     <span>This is a notification with close button.</span>
                                 </div>
+                                <button class="btn btn-warning" style="padding:5px;">
+                                
+                                <span data-notify="icon" class="pe-7s-bell"></span>
+                                </button>
                                 <div class="alert alert-info alert-with-icon" data-notify="container">
                                     <button type="button" aria-hidden="true" class="close">×</button>
                                     <span data-notify="icon" class="pe-7s-bell"></span>

@@ -8,11 +8,12 @@
         if(isset($_POST['AllowDelivery'])){
             $deliveryFee = $_POST['DeliveryFee'];
             $deliveryDays = $_POST['DeliveryDays'];
-            setRecord("UPDATE livestocksuppliers SET DeliveryFee = $deliveryFee, DeliveryDays = '$deliveryDays'
+            setRecord("UPDATE livestocksuppliers SET DeliveryFee = $deliveryFee, DeliveryDays = $deliveryDays
             WHERE SupplierNo = $companyId");
             $response->Status = "Success";
         }else{
-            setRecord("UPDATE livestocksuppliers SET DeliveryFee = null, DeliveryDays = null
+            $deliveryDays = $_POST['DeliveryDays'];
+            setRecord("UPDATE livestocksuppliers SET DeliveryFee = null, DeliveryDays = $deliveryDays
             WHERE SupplierNo = $companyId");
             $response->Status = "Success";
         }

@@ -15,6 +15,10 @@
         AND obreed.OwnerBreedId = batch.OwnerBreedId
         AND batch.BatchId = details.BatchId AND details.OrderNo = $reservationId");
         $orderStatus = $order['Status'];
+
+        $canEdit = $orderStatus===0;
+        $companyId = $_SESSION['account_company'];
+        $companyEmployeess = getRecords("SELECT * FROM employees WHERE SupplierNo = $companyId");
     ?>
 
 </head>
@@ -161,20 +165,28 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label>Date Reserved (disabled)</label>
-                                                <input type="text" class="form-control" disabled placeholder="Company" value="<?php echo $order['DateReserved']; ?>">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
                                                 <label>Status</label>
                                                 <input type="text" class="form-control" disabled placeholder="Company" value="<?php
-                                                    if($orderStatus === 0){
+                                                    if($orderStatus == 0){
                                                         echo "Pending";
                                                     }else{
                                                         echo "Closed";
                                                     }
                                                 ?>">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Managed by</label>
+                                                <select name="ClosedBy" class="form-control">
+                                                    <?php
+                                                        foreach($companyEmployeess as $employee){
+                                                            ?>
+                                                            <option <?php echo $employee['EmployeeNo'] == $order['ClosedBy'] ? "selected":""?> value="<?php echo $employee['EmployeeNo']?>"><?php echo $employee['EmpLName'].", ".$employee['EmpFName']?></option>
+                                                            <?php
+                                                        }
+                                                    ?>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -204,7 +216,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <button type="button" class="btn btn-warning pull-right" <?php echo $orderStatus===0?"":"disabled"?>>Update Profile</button>
+                                    <button type="submit" class="btn btn-warning pull-right" <?php echo $canEdit?"":"disabled"?>>Update Reservation</button>
                                     <div class="clearfix"></div>
                                 </form>
                             </div>
@@ -249,7 +261,7 @@
                                             ?>
                                         </tbody>
                                     </table>
-                                    <input type="button" value="EDIT" onclick="editCartDetails()">
+                                    <input type="button" class="btn btn-warning pull-right" value="EDIT" onclick="editCartDetails()">
                                 </form>
                                 <script>
                                     function editCartDetails(){

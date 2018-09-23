@@ -60,4 +60,7 @@
         z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
         cursor: not-allowed; /* Add a pointer on hover */
     }
+    .form-control {
+        border: solid silver 1px!important;
+    }
 </style>

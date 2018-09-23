@@ -44,6 +44,30 @@
                 ($quantity,$batchId,$reservationId)");
                 setRecord("UPDATE obbatches SET Stock = Stock - $quantity WHERE BatchId = $batchId");
             }
+
+            $buyerName = $_SESSION['account_last_name'].", ".$_SESSION['account_name'];
+            $message = "A new order has been made by ".$buyerName;
+            require_once '../../vendor/autoload.php';
+
+            //create client with api key and secret
+            $client = new Nexmo\Client(new Nexmo\Client\Credentials\Basic("72769a3f", "4KRNM9FTZ4AsLZ7E"));
+
+            //send message using simple api params
+            $toNumber = "+639569006808";
+            $from = "LiveStockPH";
+
+            //an invalid request
+            try{
+                
+            $message = $client->message()->send([
+                'to' => $toNumber,
+                'from' => $from,
+                'text' => $message
+            ]);
+            } catch (Nexmo\Client\Exception\Request $e) {
+                //can still get the API response
+            }
+            // include_once('../../sms_module/send.php');
         }else{
 
             $response->Status = "Inventory Error for ".$erroredItems;

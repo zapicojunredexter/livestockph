@@ -19,12 +19,18 @@
 <style>
     .card{
         padding: 20px;
+        border: solid silver 1px;
     }
     .form-control{
         background-color:#ddd!important;
     }
+    hr{
+        background-color: silver;
+    }
 
-
+    .btn-warning {
+        color:white!important;
+    }
 
 
 

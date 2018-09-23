@@ -200,8 +200,8 @@
                     </div>
                     <div class="col-12 col-lg-3">
                         <div class="cart-btn mt-50">
-                            <button style="background-color:red;margin-bottom:10px;" onclick="clearCart()" <?php echo $isCartFilled?"":"disabled"?> class="btn amado-btn w-100">Clear Cart</button>
-                            <button onclick="changePage(1)" class="btn amado-btn w-100" <?php echo $isCartFilled?"":"disabled"?>>Proceed to Next</button>
+                            <button style="margin-bottom:10px;" class="btn btn-danger w-100" onclick="clearCart()" <?php echo $isCartFilled?"":"disabled"?> class="btn amado-btn w-100">Clear Cart</button>
+                            <button onclick="changePage(1)" class="btn btn-warning w-100" <?php echo $isCartFilled?"":"disabled"?>>Proceed to Next</button>
                         </div>
                         <div class="cart-summary" style="margin-top:50px;">
                             <h5>Cart Total</h5>
@@ -267,13 +267,13 @@
                                     <!-- Cash on delivery -->
                                     <div class="custom-control custom-checkbox mr-sm-2">
                                         <input name="ToBeDelivered" onchange="onToggleDelivery(this)" type="checkbox" <?php echo $companyDetails['DeliveryFee'] ? "" : "disabled"; ?> class="custom-control-input" id="cod">
-                                        <label class="custom-control-label" for="cod">Pay Delivery fee?</label>
+                                        <label class="custom-control-label" for="cod">Avail delivery service?</label>
                                     </div>
                                     <input type="hidden" name="SupplierNo" value="<?php echo $companyId?>" class="form-control">
                                 </div>
 
                                 <div class="cart-btn mt-100">
-                                    <a onclick="changePage(2)" class="btn amado-btn w-100">Checkout</a>
+                                    <a onclick="changePage(2)" class="btn btn-warning w-100">Checkout</a>
                                 </div>
                             </form>
                         </div>

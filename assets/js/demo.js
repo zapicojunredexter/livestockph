@@ -131,18 +131,22 @@ demo = {
     initChartist: function(){
 
         var dataSales = {
-          labels: ['9:00AM', '12:00AM', '3:00PM', '6:00PM', '9:00PM', '12:00PM', '3:00AM', '6:00AM'],
+          // labels: ['9:00AM', '12:00AM', '3:00PM', '6:00PM', '9:00PM', '12:00PM', '3:00AM', '6:00AM'],
+          labels: ['', '', '', '', '', '', '', ''],
           series: [
-             [287, 385, 490, 492, 554, 586, 698, 695, 752, 788, 846, 944],
+            [287, 385, 490, 492, 554, 586, 698, 695, 752, 788, 846, 944],
             [67, 152, 143, 240, 287, 335, 435, 437, 539, 542, 544, 647],
-            [23, 113, 67, 108, 190, 239, 307, 308, 439, 410, 410, 509]
+            [23, 113, 67, 108, 190, 239, 307, 308, 439, 410, 410, 1509]
+            /*[287, 385, 490, 492, 554, 586, 698, 695, 752, 788, 846, 944],
+            [67, 152, 143, 240, 287, 335, 435, 437, 539, 542, 544, 647],
+            [23, 113, 67, 108, 190, 239, 307, 308, 439, 410, 410, 1509]*/
           ]
         };
 
         var optionsSales = {
           lineSmooth: false,
           low: 0,
-          high: 800,
+          high: 2000,
           showArea: true,
           height: "245px",
           axisX: {
@@ -151,8 +155,8 @@ demo = {
           lineSmooth: Chartist.Interpolation.simple({
             divisor: 3
           }),
-          showLine: false,
-          showPoint: false,
+          showLine: true,
+          showPoint: true,
         };
 
         var responsiveSales = [
@@ -217,8 +221,8 @@ demo = {
         Chartist.Pie('#chartPreferences', dataPreferences, optionsPreferences);
 
         Chartist.Pie('#chartPreferences', {
-          labels: ['62%','32%','6%'],
-          series: [62, 32, 6]
+          labels: ['50%','25%','25%','hehe'],
+          series: [50, 25, 12,13]
         });
     },
 

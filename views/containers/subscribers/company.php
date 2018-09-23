@@ -29,16 +29,34 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                        Select image to upload:
-                        <input type="file" name="fileToUpload" id="fileToUpload" class="form-control">
-                        <input type="text" name="CertificateName" class="form-control">
-                        <input type="text" name="IssuedBy" class="form-control">
-                        <input type="date" name="DateIssued" class="form-control">
-                        <input type="date" name="Expiration" class="form-control">
+                    <div class="card">
+                        <div class="content">
+                            <div class="form-group">
+                                <label>SELECT FIle (PDF / Images only)</label>
+                                <input type="file" name="fileToUpload" id="fileToUpload" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>name</label>
+                                <input type="text" name="CertificateName" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>issued by</label>
+                                <input type="text" name="IssuedBy" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>date issued</label>
+                                <input type="date" name="DateIssued" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>valid until</label>
+                                <input type="date" name="Expiration" class="form-control">
+                            </div>
+                        </div>
+                    </div>
                         <input type="hidden" name="companyId" value="<?php echo $companyId; ?>">
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" onclick="$('#addDocumentsModal').modal('hide')" class="btn btn-primary">UPLOAD DOCUMENT</button>
+                    <button type="submit" onclick="$('#addDocumentsModal').modal('hide')" class="btn btn-success">UPLOAD DOCUMENT</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
                 </div>
@@ -57,17 +75,40 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                    
-                        <input type="text" class="form-control" placeholder ="Employee First Name" name="EmpFName">
-                        <input type="text" class="form-control" placeholder="Employee Last Name" name="EmpLName">
+                        <div class="card">
+                            <div class="header">EMPLOYEE DETAILS</div>
+                            <div class="content">
+                                <div class="form-group">
+                                    <label>First name</label>
+                                    <input type="text" class="form-control" placeholder ="Employee First Name" name="EmpFName">
+                                </div>
+                            
+                                <div class="form-group">
+                                    <label>Last name</label>
+                                    <input type="text" class="form-control" placeholder="Employee Last Name" name="EmpLName">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="header">ACCOUNT DETAILS</div>
+                            <div class="content">
+                                <div class="form-group">
+                                    <label>Username</label>
+                                    <input type="text" class="form-control" placeholder="Username" name="Username">
+                                </div>
+                            
+                                <div class="form-group">
+                                    <label>Password</label>
+                                        <input type="text" class="form-control" placeholder="Password" name="Password">
+                                </div>
+                            </div>
+                        </div>
                         <br>
-                        <input type="text" class="form-control" placeholder="Username" name="Username">
-                        <input type="text" class="form-control" placeholder="Password" name="Password">
                         <input type="hidden" value="<?php echo $companyId; ?>" name="SupplierNo">
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" onclick="addEmployee()" class="btn btn-primary">Save changes</button>
+                        <button type="button" onclick="addEmployee()" class="btn btn-success">Save changes</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </form>
@@ -234,7 +275,7 @@
                                         </div>
                                     </div>
 
-                                    <button type="submit" class="btn amado-btn pull-right">Update Profile</button>
+                                    <button type="submit" class="btn btn-warning pull-right">Update Profile</button>
                                     <div class="clearfix"></div>
                                 </form>
                             </div>
@@ -259,14 +300,14 @@
                                             <label>Delivery Fee</label>
                                             <input name="DeliveryFee" type="text" class="form-control" placeholder="PHP 0.00" value="<?php echo $user['DeliveryFee']; ?>">
                                         </div>
+                                    </div>    
                                         <div class="form-group">
-                                            <label>expected days for delivery</label>
+                                            <label>No. of days before order closes</label>
                                             
-                                            <input type="number" name="DeliveryDays" class="form-control" placeholder="0 days" value="<?php echo $user['DeliveryDays']; ?>">
+                                            <input type="number" min="0" name="DeliveryDays" class="form-control" placeholder="0 days" value="<?php echo $user['DeliveryDays']; ?>">
                                             
                                         </div>
-                                    </div>    
-                                    <input onclick="editSettings()" type="button" value="Edit">
+                                    <input onclick="editSettings()" class="btn btn-warning pull-right" type="button" value="Update Settings">
                                 </form>
                             </div>
                         </div>

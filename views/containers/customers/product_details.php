@@ -48,10 +48,19 @@
         ?>
 
         <!-- Product Details Area Start -->
-        <div class="single-product-area clearfix mt-100">
+        <div class="single-product-area clearfix">
             <div class="container-fluid">
                 <div class="row">
-                
+                    
+                    <div class="col-12">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb mt-50">
+                                <li class="breadcrumb-item"><a href="#"><?php echo $product['CategoryDescription']?></a></li>
+                                <li class="breadcrumb-item"><a href="supplier_details.php?id=<?php echo $product['SupplierNo']?>"><?php echo $product['SupplierName']?></a></li>
+                                <li class="breadcrumb-item active" aria-current="page"><?php echo $product['CategoryDescription']." ".$product['BreedDescription']?></li>
+                            </ol>
+                        </nav>
+                    </div>
                     <div class="col-md-12 col-lg-7">
                         <div class="single_product_thumb" style="margin-bottom:0px;">
                             <div id="product_details_slider" class="carousel slide" data-ride="carousel">
@@ -99,6 +108,7 @@
 
 
 
+
                     <div class="col-12 col-lg-5">
                         <div class="single_product_desc">
                             <!-- Product Meta Data -->
@@ -126,7 +136,7 @@
 
                             <!-- Add to Cart Form -->
                             <form class="cart clearfix" method="post">
-                                <button onclick="addToCart(<?php echo $product['BatchId']?>,<?php echo $product['Stock']?>,<?php echo $product['SupplierNo']?>)" type="button" name="addtocart" value="5" class="btn amado-btn">Add to cart</button>
+                                <button onclick="addToCart(<?php echo $product['BatchId']?>,<?php echo $product['Stock']?>,<?php echo $product['SupplierNo']?>)" type="button" name="addtocart" value="5" class="btn btn-warning w-100">Add to cart</button>
                             </form>
 
                         </div>

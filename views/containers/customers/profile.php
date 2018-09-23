@@ -5,6 +5,12 @@
     
     <?php
         require_once('../../components/customers_main_header.php');
+        require_once('../../../utils/db_conn.php');
+        require_once('../../../utils/session_functions.php');
+
+        $userId = $_SESSION['account_id'];
+        $user = getRecord("SELECT * FROM livestockbuyers buyer, accounts account WHERE
+        buyer.BuyerNo = $userId AND buyer.BuyerNo = account.OwnerId");
     ?>
 
 </head>
@@ -38,20 +44,40 @@
         ?>
 
         <!-- Product Details Area Start -->
-        <div class="single-product-area clearfix">
+        <div class="single-product-area clearfix mt-50">
             <div class="container-fluid">
-            <div class="row">
+                <?php
+                    if(isset($_GET['message']) && ($_GET['message'])=="Success"){
+                        ?>
+                        <div class="alert alert-success" id="successMessage">
+                            <button type="button" onclick="$('#successMessage').remove()" class="close">×</button>
+                            <span><b> Success - </b> This is a regular notification made with ".alert-success"</span>
+                        </div>
+                        <?php
+                    }else{
+                        if(isset($_GET['message'])){
+                            ?>
+                            <div class="alert alert-danger" id="errorMessage">
+                                <button type="button" onclick="$('#errorMessage').remove()" class="close">×</button>
+                                <span><b> Error - </b> This is a regular notification made with ".alert-success"</span>
+                            </div>
+                            <?php
+                        }
+                    }
+                ?>
+                <div class="row">
                     <div class="col-md-4">
                         <div class="card">
-                            <div class="image">
-                                <img src="https://ununsplash.imgix.net/photo-1431578500526-4d9613015464?fit=crop&fm=jpg&h=300&q=75&w=400" alt="..."/>
+                            <div class="image" style="text-align:center;">
+                                <img style="border-radius:50%; box-shadow: 3px 3px 3px" src="../../../assets/img/faces/face-3.jpg" alt="..."/>
                             </div>
                             <div class="content">
-                                <div class="author">
+                                <div class="author" style="text-align:center;">
+                                <br>
                                      <a href="#">
-                                    <img class="avatar border-gray" src="../../../assets/img/faces/face-3.jpg" alt="..."/>
-
-                                      <h4 class="title">Mike Andrew
+                                   
+                                      <h4 class="title">
+                                        <?PHP echo $user['BuyerLName'].", ".$user['BuyerFName']?>
                                       </h4>
                                     </a>
                                 </div>
@@ -71,24 +97,18 @@
                                 <h4 class="title">Edit Profile</h4>
                             </div>
                             <div class="content">
-                                <form>
+                                <form method="post" action="../../../controllers/customers/edit_account.php">
                                     <div class="row">
-                                        <div class="col-md-5">
-                                            <div class="form-group">
-                                                <label>Company (disabled)</label>
-                                                <input type="text" class="form-control" disabled placeholder="Company" value="<?php echo $user['SupplierName']; ?>">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>Username</label>
-                                                <input type="text" class="form-control" placeholder="Username" value="michael23">
+                                                <input type="text" class="form-control" disabled placeholder="Username" value="<?php echo $user['Username']?>">
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="exampleInputEmail1">Email address</label>
-                                                <input type="email" class="form-control" placeholder="Email" value="<?php echo $user['Email']; ?>">
+                                                <label for="exampleInputEmail1">Password</label>
+                                                <input type="password" class="form-control" disabled placeholder="Email" value="<?php echo $user['Password']; ?>">
                                             </div>
                                         </div>
                                     </div>
@@ -97,7 +117,7 @@
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label>Street</label>
-                                                <input type="text" class="form-control" placeholder="Home Address" value="<?php echo $user['Street']; ?>">
+                                                <input type="text" name="Street" class="form-control" placeholder="Home Address" value="<?php echo $user['Street']; ?>">
                                             </div>
                                         </div>
                                     </div>
@@ -106,19 +126,19 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Province</label>
-                                                <input type="text" class="form-control" placeholder="City" value="<?php echo $user['Province']; ?>">
+                                                <input type="text" name="Province" class="form-control" placeholder="City" value="<?php echo $user['Province']; ?>">
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>City</label>
-                                                <input type="text" class="form-control" placeholder="Country" value="<?php echo $user['City']; ?>">
+                                                <input type="text" name="City" class="form-control" placeholder="Country" value="<?php echo $user['City']; ?>">
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Zip Code</label>
-                                                <input type="number" class="form-control" placeholder="ZIP Code" value="<?php echo $user['ZipCode']; ?>">
+                                                <input type="number" name="ZipCode" class="form-control" placeholder="ZIP Code" value="<?php echo $user['ZipCode']; ?>">
                                             </div>
                                         </div>
                                     </div>
@@ -126,18 +146,18 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>First Name</label>
-                                                <input type="text" class="form-control" placeholder="Company" value="<?php echo $user['EmpFName']; ?>">
+                                                <input type="text" name="BuyerFName" class="form-control" placeholder="Company" value="<?php echo $user['BuyerFName']; ?>">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>Last Name</label>
-                                                <input type="text" class="form-control" placeholder="Last Name" value="<?php echo $user['EmpLName']; ?>">
+                                                <input type="text" name="BuyerLName" class="form-control" placeholder="Last Name" value="<?php echo $user['BuyerLName']; ?>">
                                             </div>
                                         </div>
                                     </div>
 
-                                    <button type="submit" class="btn btn-info btn-fill pull-right">Update Profile</button>
+                                    <button type="submit" class="btn btn-success btn-fill pull-right">Update Profile</button>
                                     <div class="clearfix"></div>
                                 </form>
                             </div>

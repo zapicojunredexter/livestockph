@@ -16,6 +16,10 @@
         obbatches batch WHERE category.CategoryId = breed.CategoryId AND breed.BreedId = obreed.BreedId
         AND obreed.OwnerBreedId = batch.OwnerBreedId");
 
+        $pregnantBreeds = getRecords("SELECT * FROM ownerbreeds obreed, breeds breed, categories category
+        WHERE category.CategoryId = breed.CategoryId AND breed.BreedId = obreed.BreedId
+        AND obreed.PregnantUnits > 0 AND obreed.SupplierNo = $companyId");
+
     ?>
 
 </head>
@@ -54,15 +58,12 @@
                 <div class="row">
                 
                     <div class="col-lg-5">
-
-
-
                         <div id="slideshow">
                             <?php
                                 foreach($products as $product){
                                     if($product['Photo']){
                                     ?>
-                                        <div>
+                                        <div style="box-shadow: 3px 3px 3px gray;">
                                         <img src="<?php echo "../../../files/images/products/".$product['Photo']?>">
                                         </div>
                                     <?php
@@ -70,10 +71,6 @@
                                 }
                             ?>
                         </div>
-
-
-
-
                     </div>
 
 
@@ -84,6 +81,11 @@
 
 
                     <div class="col-lg-7 card">
+                    
+                        <div class="header">
+                            <h5>COMPANY DETAILS</h5>
+                            <hr style=""/>
+                        </div>
                         <div class="single_product_desc content">
                             <div class="row" style="margin-top:10px;">
                                 <div class="col-md-12">
@@ -147,39 +149,82 @@
                         </div>
                     </div>
 
-
-
-
-                    <div class="col-sm-12" style="margin-top:100px;">
-                        <div class="row">
-                            <?php
-                                foreach($products as $batch){
-                                    ?>
-                                    <div class="col-sm-3" style="padding:20px;">
-                                   
-                                        <a href="product_details.php?id=<?php echo $batch['BatchId']?>">
-                                            <img src="<?php
-                                                echo $batch['Photo']?
-                                                    "../../../files/images/products/".$batch['Photo']
-                                                    :"../../../assets/img/defaults/no_image.jpg"?>"
-                                                    alt="<?php echo $batch['Photo']?>"
-                                                    style="width:100%;">
-                                            <div class="hover-content">
-                                                <div class="line"></div>
-                                                <p>PHP <?php echo $batch['PricePerKilo']?></p>
-                                                <h5><?php echo $batch['CategoryDescription']." - ".$batch['BreedDescription']?></h5>
-                                            </div>
-                                        </a>
-                                        
-                                        <div class="ratings-cart text-right">
-                                            <div class="cart">
-                                                <a onclick="addToCart(<?php echo $batch['BatchId']?>,<?php echo $batch['Stock']?>,<?php echo $batch['SupplierNo']?>)" data-toggle="tooltip" data-placement="left" title="Add to Cart"><img src="../../../assets/img/core-img/cart.png" alt=""></a>
+                               
+                    <div class="col-sm-12" style="margin:50px 0px 50px 20px;">
+                        <div class="card">
+                            <div class="header">
+                                <h5>FEATURED PRODUCTS</h5>
+                                <hr style=""/>
+                            </div>
+                            <div class="row content">
+                                <?php
+                                    foreach($products as $batch){
+                                        ?>
+                                        <div class="col-sm-3" style="padding:20px;">
+                                    
+                                            <a href="product_details.php?id=<?php echo $batch['BatchId']?>">
+                                                <img src="<?php
+                                                    echo $batch['Photo']?
+                                                        "../../../files/images/products/".$batch['Photo']
+                                                        :"../../../assets/img/defaults/no_image.jpg"?>"
+                                                        alt="<?php echo $batch['Photo']?>"
+                                                        style="width:100%;">
+                                                <div class="hover-content">
+                                                    <div class="line"></div>
+                                                    <p>PHP <?php echo $batch['PricePerKilo']?></p>
+                                                    <h5><?php echo $batch['CategoryDescription']." - ".$batch['BreedDescription']?></h5>
+                                                </div>
+                                            </a>
+                                            
+                                            <div class="ratings-cart text-right">
+                                                <div class="cart">
+                                                    <a onclick="addToCart(<?php echo $batch['BatchId']?>,<?php echo $batch['Stock']?>,<?php echo $batch['SupplierNo']?>)" data-toggle="tooltip" data-placement="left" title="Add to Cart"><img src="../../../assets/img/core-img/cart.png" alt=""></a>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <?php
-                                }
-                            ?>
+                                        <?php
+                                    }
+                                ?>
+                            </div>
+                        
+                        </div>
+                    </div>
+
+
+
+
+ 
+                    <div class="col-sm-12" style="margin:0px 0px 100px 20px;">
+                        <div class="card">
+                            <div class="header">
+                                <h5>FORECASTED PRODUCTS</h5>
+                                <hr style=""/>
+                            </div>
+                            <div class="content">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:33%">Category</th>
+                                            <th style="width:33%">Breed</th>
+                                            <th style="width:33%">No. of Pregnant Units</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                            foreach($pregnantBreeds as $breed){
+                                                ?>
+                                                    <tr>
+                                                        <td><?php echo $breed['CategoryDescription']?></td>
+                                                        <td><?php echo $breed['BreedDescription']?></td>
+                                                        <td><?php echo $breed['PregnantUnits']?></td>
+                                                    </tr>
+                                                <?php
+                                            }
+                                        ?>
+                                    </tbody>
+                                    <tr>
+                                </table>
+                            </div>
                         </div>
                     </div>
 

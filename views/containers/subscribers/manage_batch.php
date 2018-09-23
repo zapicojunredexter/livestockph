@@ -34,13 +34,13 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                <input type="text" name="BatchId" value="<?php echo $batchId?>">
+                <input type="hidden" name="BatchId" value="<?php echo $batchId?>">
                         Select image to upload:
                         <input type="file" name="fileToUpload" id="fileToUpload" class="form-control">
                         <input type="hidden" name="companyId" value="<?php echo $companyId; ?>">
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" onclick="$('#addImageModal').modal('hide')" class="btn btn-primary">UPLOAD DOCUMENT</button>
+                    <button type="submit" onclick="$('#addImageModal').modal('hide')" class="btn btn-success">UPLOAD DOCUMENT</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
                 </div>
@@ -139,7 +139,7 @@
 
 
             <div class="content">
-            <button data-toggle="modal" data-target="#addImageModal">addd</button>
+            <button data-toggle="modal" data-target="#addImageModal" class="btn btn-warning" style="margin:10px;">addd</button>
             <?php
                 if(isset($_GET['message']) && ($_GET['message'])=="Success"){
                     ?>
@@ -241,7 +241,7 @@
                                             </div>
                                         </div>
                                             <br>
-                                            <button type="submit" name="addtocart" value="5" class="btn amado-btn">EDIT</button>
+                                            <button type="submit" name="addtocart" value="5" class="btn btn-warning w-100" style="height:50px;">EDIT</button>
                                     
                                     </form>
                                 </div>

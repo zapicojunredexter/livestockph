@@ -7,16 +7,18 @@
         require_once('../../../utils/db_conn.php');
         require_once('../../../utils/session_functions.php');
         $companyId = $_SESSION['account_company'];
+        $loggedInUserId = $_SESSION['account_id'];
         $orders = getRecords("SELECT * FROM reservations reservation,
         livestockbuyers buyer WHERE buyer.BuyerNo = reservation.BuyerNo
         AND reservation.SupplierNo = $companyId ORDER BY reservation.DateReserved DESC");
-
         $productBatches = getRecords("SELECT *, FLOOR(DATEDIFF(CURDATE(),batch.DOB)/30) AS MonthsOld FROM obbatches batch, ownerbreeds ownerbreed, breeds breed, categories category,
         livestocksuppliers supp WHERE category.CategoryId = breed.CategoryId AND breed.BreedId = ownerbreed.BreedId AND
         supp.SupplierNo = ownerbreed.SupplierNo AND ownerbreed.OwnerBreedId = batch.OwnerBreedId AND batch.Stock > 0
         AND supp.SupplierNo = $companyId");
-        $testCompanies = getRecords("SELECT *,(SELECT BreedDescription FROM breeds WHERE BreedId = category.CategoryId LIMIT 10 ) AS BreedTest FROM categories category");
-      
+        //$testCompanies = getRecords("SELECT *,(SELECT BreedDescription FROM breeds WHERE BreedId = category.CategoryId LIMIT 10 ) AS BreedTest FROM categories category");
+        $companyDetails = getRecord("SELECT * FROM livestocksuppliers supplier WHERE supplier.SupplierNo = $companyId");
+        $companyEmployeess = getRecords("SELECT * FROM employees WHERE SupplierNo = $companyId");
+        
     ?>
 
 </head>
@@ -37,11 +39,11 @@
                   
 
   
-            <ul id="progressbar">
-                <li id="customerLis" class="active" onclick="changePage(0)">Customer Details</li>
-                <li id="checkoutLis" onclick="changePage(1)">Checkout</li>
-                <li id="orderLis" onclick="changePage(2)">Order Details</li>
-            </ul>
+                        <ul id="progressbar">
+                            <li id="customerLis" class="active" onclick="changePage(0)">Customer Details</li>
+                            <li id="checkoutLis" onclick="changePage(1)">Checkout</li>
+                            <li id="orderLis" onclick="changePage(2)">Order Details</li>
+                        </ul>
                         <div id="customerDiv">
                             <div class="card">
                                 <div class="header">
@@ -151,14 +153,14 @@
                             </div>
                             
                             <div class="row">
-                                        <div class="col-sm-6">
-                                            <button type="button" onclick="changePage(0)" class="btn btn-secondary" style="width:100%">Previous</button>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <button type="button" onclick="changePage(2)" class="btn btn-warning pull-right" style="width:100%">Next</button>
-                                            
-                                        </div>
-                                    </div>
+                                <div class="col-sm-6">
+                                    <button type="button" onclick="changePage(0)" class="btn btn-secondary" style="width:100%">Previous</button>
+                                </div>
+                                <div class="col-sm-6">
+                                    <button type="button" onclick="changePage(2)" class="btn btn-warning pull-right" style="width:100%">Next</button>
+                                    
+                                </div>
+                            </div>
                         </div>
 
                         <div id="orderDiv" style="display:none;">
@@ -170,14 +172,22 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label>Date Reserved</label>
-                                                <input type="text" value="<?php date('Y-m-d')?>" class="form-control">
+                                                <label>Employee in-charge</label>
+                                                <select name="ClosedBy" class="form-control">
+                                                    <?php
+                                                        foreach($companyEmployeess as $employee){
+                                                            ?>
+                                                                <option <?php echo $loggedInUserId == $employee['EmployeeNo'] ? "selected" : "" ?> value="<?php echo $employee['EmployeeNo']?>"><?php echo $employee['EmpLName'].', '.$employee['EmpFName']?></option>
+                                                            <?php
+                                                        }
+                                                    ?>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>Status</label>
-                                                <input type="text" class="form-control">
+                                                <input disabled value="Walk-in" type="text" class="form-control">
                                             </div>
                                         </div>
                                     </div>
@@ -208,7 +218,7 @@
                                             <button type="button" onclick="changePage(1)" class="btn btn-secondary" style="width:100%">Previous</button>
                                         </div>
                                         <div class="col-sm-6">
-                                            <button type="button" onclick="confirmCheckout()" class="btn btn-primary" style="width:100%">Save changes</button>
+                                            <button type="button" onclick="confirmCheckout()" class="btn btn-success" style="width:100%">Save changes</button>
                                         </div>
                                     </div>
                                     <div class="clearfix"></div>
@@ -378,23 +388,28 @@
                             <div class="content table-responsive table-full-width">
                                 <script>
                                     function sortOrderTable(sortBy){
-                                        return;
-                                        var tb = $('#ordertbody');
-                                        var rows = tb.find('tr');
-                                        var sortedArray = [];
+                                        var $table=$('#ordertbody');
+
+                                        var rows = $table.find('tr').get();
                                         rows.sort(function(a, b) {
                                             var keyA = $(a).attr(sortBy);
                                             var keyB = $(b).attr(sortBy);
                                             return keyA - keyB;
+                                            /*
+                                            \
+                                            if (keyA < keyB) return -1;
+                                            if (keyA > keyB) return 1;
+                                            return 0;
+                                            */
                                         });
                                         $.each(rows, function(index, row) {
-                                            tb.append(row);
+                                            $table.append(row);
                                         });
                                     }
                                 </script>
                                 <table class="table table-hover table-striped">
                                     <thead>
-                                        <th onclick="sortOrderTable('id')">ID</th>
+                                        <th style="" onclick="sortOrderTable('id')">ID</th>
                                     	<th onclick="sortOrderTable('customerName')">Customer Name</th>
                                     	<th onclick="sortOrderTable('transactionDate')">Transaction Date</th>
                                     	<th onclick="sortOrderTable('actualAmount')">Actual Amount</th>
@@ -408,7 +423,7 @@
                                                 id="<?php echo $order['ReservationNo'];?>"
                                                 customerName="<?php echo $order['BuyerLName'].$order['BuyerFName'];?>"
                                                 transactionDate="<?php echo $order['DateReserved'];?>"
-                                                actualAmount="<?php echo $order['ActualAmount'];?>"
+                                                actualAmount="<?php echo $order['ActualAmount'] ? $order['ActualAmount'] : 0;?>"
                                                 status="<?php echo $order['Status'];?>"
                                                 onclick="window.open('order_details.php?id=<?php echo $order['ReservationNo']?>')"
                                             >
@@ -422,10 +437,20 @@
                                                         $toBeDelivered = $order['ToBeDelivered'];
                                                         switch($status){
                                                             case 0:
-                                                                if($toBeDelivered){
-                                                                    echo "<span class='badge badge-danger'>for Delivery</span>";
-                                                                }else{
-                                                                    echo "<span class='badge badge-info'>for Pickup</span>";
+                                                                if(!$order['ActualAmount']){
+                                                                    $diff = abs(strtotime(date('Y-m-d')) - strtotime($order['DateReserved']));
+                                                                    if(false){
+                                                                        // condition if before allowed date
+                                                                    }else{
+
+                                                                        if($toBeDelivered){
+                                                                            echo "<span class='badge badge-danger'>for Delivery</span>";
+                                                                        }else{
+                                                                            echo "<span class='badge badge-info'>for Pickup</span>";
+                                                                            
+                                                                        }
+                                                                    }
+                                                                    echo $diff."not pid pa";
                                                                 }
                                                                 break;
                                                             default:
@@ -470,9 +495,7 @@
 
     <!--  Notifications Plugin    -->
     <script src="../../../assets/js/bootstrap-notify.js"></script>
-
-    <!--  Google Maps Plugin    -->
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
+    
 
     <!-- Light Bootstrap Table Core javascript and methods for Demo purpose -->
 	<script src="../../../assets/js/light-bootstrap-dashboard.js?v=1.4.0"></script>

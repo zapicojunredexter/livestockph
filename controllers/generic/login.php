@@ -18,6 +18,7 @@
                                         
                         $_SESSION['account_id'] = $customer['BuyerNo'];
                         $_SESSION['account_name'] = $customer['BuyerFName'];
+                        $_SESSION['account_last_name'] = $customer['BuyerFName'];
                         $response->Status = 'Success Buyer Account';
                     }else{
                         $subscriber = getRecord("SELECT * FROM employees e, livestocksuppliers l WHERE l.SupplierNo = e.EmployeeNo AND e.EmployeeNo = $ownerId");

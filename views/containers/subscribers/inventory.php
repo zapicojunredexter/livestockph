@@ -21,6 +21,74 @@
 
 </head>
 <body>
+    
+    <div class="modal" tabindex="-1" role="dialog" id="editOfferedProductsModal">
+        <div class="modal-dialog" role="document">
+            <form id="editOfferedProductsForm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">EDIT PRODUCTS OFFERED</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="OwnerBreedId" name="OwnerBreedId">
+                        <div class="card" style="margin-bottom:10px;">
+                            <div class="content">
+                                <div class="form-group">
+                                    <label>CATEGORY</label>
+                                    <input id="CategoryDescription" type="text" class="form-control" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label>Breed</label>
+                                    <input id="BreedDescription" type="text" class="form-control" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label>No. of Pregnant units</label>
+                                    <input min="0" id="PregnantUnits" name="PregnantUnits" type="number" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button type="button" onclick="submitEditOfferedProducts()" class="btn btn-success">Save changes</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        function editOfferedProduct(object){
+            $('#OwnerBreedId').val(object.OwnerBreedId);
+            $('#CategoryDescription').val(object.CategoryDescription);
+            $('#BreedDescription').val(object.BreedDescription);
+            $('#PregnantUnits').val(object.PregnantUnits);
+            $('#editOfferedProductsModal').modal('show');
+        }
+        function submitEditOfferedProducts(){
+            $.ajax({
+                method: 'post',
+                url: "../../../controllers/subscribers/edit_offered_products.php",
+                data: $('#editOfferedProductsForm').serialize(),
+                success: function(result){
+                    console.log(result);
+                    var jsonResult = JSON.parse(result);
+                    if(jsonResult.Status=='Success'){
+                        alert("Successfully edited");
+                        window.location.reload();
+                    }else{
+                        alert(jsonResult.Status);
+                    }
+                },
+                fail: function(result){
+                    console.log(result);
+                }
+            });
+        }
+    </script>
     <div class="modal" tabindex="-1" role="dialog" id="addProductsOfferedModal">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -58,7 +126,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" onclick="addProductsOffered()" class="btn btn-primary">Save changes</button>
+                        <button type="button" onclick="addProductsOffered()" class="btn btn-success">Save changes</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </form>
@@ -76,38 +144,77 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div class="row">
-                            <div class="col-sm-4">Stock</div>
-                            <div class="col-sm-8">
-                            
-                                <input type="number" name="Stock" placeholder="Initial Stock" class="form-control">
-                            </div>
-                            <div class="col-sm-4">Average Weight</div>
-                            <div class="col-sm-8">
-                            
-                                <input type="number" name="AverageWeight" placeholder="Average weight" class="form-control">
-                            </div>
-                            <div class="col-sm-4">Pricer Per Kilo</div>
-                            <div class="col-sm-8">
-                            
-                                <input type="number" name="PricePerKilo" placeholder="Price per kilo" class="form-control">
-                            </div>
-                            <div class="col-sm-4">DOB</div>
-                            <div class="col-sm-8">
-                            
-                                <input type="date" name="DOB" class="form-control">
+                        <div class="card">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="form-group col-sm-12" style="margin-top:20px;">
+                                        <label>Category</label>
+                                        <select class="form-control" onchange="onChangeCategoryForNewProduct(this.value)">
+                                            <option value=""></option>
+                                            <?php
+                                                foreach($categories as $categor){
+                                                    ?>
+
+                                                        <option value="<?php echo $categor['CategoryId']?>"><?php echo $categor['CategoryDescription']?></option>
+                                                    <?php
+                                                }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label>breed</label>
+                                        <select class="form-control" id="ownerBreedBatchIds" name="OwnerBreedId">
+
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-sm-12" style="margin-top:20px;">
+                                        <label>Description</label>
+                                        <textarea name="Description" style="height: 100px;" class="form-control"></textarea>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label>Initial Stock</label>
+                                        <input type="number" name="Stock" placeholder="Initial Stock" class="form-control">
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label>Average Weight</label>
+                                        <input type="number" name="AverageWeight" placeholder="Average weight" class="form-control">
+                                
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label>Price per kilo</label>
+                                        <input type="number" name="PricePerKilo" placeholder="Price per kilo" class="form-control">
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label>DOB</label>
+                                        <input type="date" name="DOB" class="form-control">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <input type="hidden" name="OwnerBreedId" id="ownerBreedIdField">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" onclick="addProductsBatch()" class="btn btn-primary">Save changes</button>
+                        <button type="button" onclick="addProductsBatch()" class="btn btn-success">Save changes</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
+
+    
+    <script>
+        var categories = <?php echo json_encode($categories)?>;
+        var breeds = <?php echo json_encode($breeds)?>;
+        function onChangeCategoryForNewProduct(categoryId){
+            $('#ownerBreedBatchIds').empty();
+            for(var i = 0; i< breeds.length;i+=1){
+                if(breeds[i].CategoryId == categoryId){
+                    $('#ownerBreedBatchIds').append("<option value='"+breeds[i].BreedId+"'>"+breeds[i].BreedDescription+"</option>");
+                }
+           }
+        }
+    </script>
 
     <script>
         function addBatchToOwnerBreed(ownerBreedId){
@@ -122,7 +229,7 @@
                 success: function(result){
                     var jsonResult = JSON.parse(result);
                     if(jsonResult.Status=='Successfully Added'){
-                        window.location.reload();
+                        window.location.href="manage_batch.php?id="+jsonResult.BatchId;
                     }else{
                         alert(jsonResult.Status);
                     }
@@ -258,6 +365,7 @@
                                             <th>#</th>
                                             <th>Category</th>
                                             <th>Breed</th>
+                                            <th>No. of Pregnant Units</th>
                                             <th></th>
                                         </thead>
                                         
@@ -270,10 +378,12 @@
                                                             <td><?php echo ++$i;?></td>
                                                             <td><?php echo $product['CategoryDescription']?></td>
                                                             <td><?php echo $product['BreedDescription']?></td>
+                                                            <td><?php echo $product['PregnantUnits']?></td>
                                                             <td>
-                                                                <button onclick="addBatchToOwnerBreed(<?php echo $product['OwnerBreedId']?>)" type="button" rel="tooltip" title="Edit Task" class="btn btn-info btn-simple btn-xs">
+                                                                <button onclick='editOfferedProduct(<?php echo json_encode($product)?>)' type="button" rel="tooltip" title="Edit Task" class="btn btn-info btn-simple btn-xs">
                                                                     <i class="fa fa-edit"></i>
                                                                 </button>
+                                                                    
                                                             </td>
                                                         </tr>
                                                     <?php
@@ -292,6 +402,7 @@
                             <div class="card">
                                 <div class="header">
                                     <h4 class="title" style="display:inline;">Inventory</h4>
+                                    <img data-toggle="modal" data-target="#addInventoryModal" src="../../../assets/img/icons/add_icon.gif" class="icon_small" alt="">
                                 </div>
                                 <div class="content">
 
@@ -312,7 +423,7 @@
                                                     foreach($productBatches as $batch){
                                                         ?>
                                                             <tr onclick="window.open('./manage_batch.php?id=<?php echo $batch['BatchId'];?>')">
-                                                                <td><?php echo ++$i; ?></td>
+                                                                <td><?php echo $batch['BatchId']; ?></td>
                                                                 <td><?php echo $batch['CategoryDescription'].' '.$batch['BreedDescription']; ?></td>
                                                                 <td><?php echo $batch['Stock']; ?></td>
                                                                 <td><?php echo $batch['PricePerKilo']; ?></td>
