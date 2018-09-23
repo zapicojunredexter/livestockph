@@ -121,7 +121,7 @@
                         <div class="card ">
                             <div class="header">
                                 <h4 class="title">Tasks</h4>
-                                <p class="category">Backend development</p>
+                                <p class="category">For Delivery/ Pickup</p>
                             </div>
                             <div class="content">
                                 <div class="table-full-width">
@@ -168,8 +168,8 @@
                         <div class="card">
 
                             <div class="header">
-                                <h4 class="title">Email Statistics</h4>
-                                <p class="category">Last Campaign Performance</p>
+                                <h4 class="title">Inventory Sales Report</h4>
+                                <p class="category">Most Sold Items</p>
                             </div>
                             <div class="content">
                                 <div id="chartPreferences" class="ct-chart ct-perfect-fourth"></div>
@@ -293,7 +293,7 @@
             Chartist.Pie('#chartPreferences', dataPreferences, optionsPreferences);
 
             Chartist.Pie('#chartPreferences', {
-            labels: ['qwe%','qwe%','25%','hehe'],
+            labels: [' ',' ',' ',' '],
             series: [50, 25, 12,13]
             });
         	// demo.initChartist();

@@ -53,7 +53,7 @@
             $client = new Nexmo\Client(new Nexmo\Client\Credentials\Basic("72769a3f", "4KRNM9FTZ4AsLZ7E"));
 
             //send message using simple api params
-            $toNumber = "+639569006808";
+            $toNumber = "+639438110877";
             $from = "LiveStockPH";
 
             //an invalid request

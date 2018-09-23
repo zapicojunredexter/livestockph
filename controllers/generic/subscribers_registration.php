@@ -12,9 +12,10 @@
         $accountExpiry = date('Y-m-d', strtotime("+3 months", strtotime(date('Y-m-d'))));
         $email = $_POST['Email'];
         $deliveryFee = $_POST['DeliveryFee'];
-        $supplierId = setRecord("INSERT INTO livestocksuppliers (SupplierName,ContactNo,City,Province,Street,ZipCode,AccountExpiry,Email,DeliveryFee)
-            VALUES ('$supplierName','$contactNo','$city','$province','$street','$zipCode','$accountExpiry','$email',$deliveryFee)");
-
+        print_r($_POST);
+        $supplierId = setRecord("INSERT INTO livestocksuppliers (SupplierName,ContactNo,City,Province,Street,ZipCode,AccountExpiry)
+            VALUES ('$supplierName','$contactNo','$city','$province','$street','$zipCode','$accountExpiry')");
+        return;
         $employeeFName = $_POST['EmpFName'];
         $employeeLName = $_POST['EmpLName'];
         $ownerId = setRecord("INSERT INTO employees (EmpFName,EmpLName,SupplierNo) VALUES ('$employeeFName','$employeeLName',$supplierId)");
@@ -25,12 +26,13 @@
         $accountId = setRecord("INSERT INTO accounts (Username,Password,AccountType,OwnerId) VALUES ('$username','$password','$accountType',$ownerId)");
         
         session_start();
+        $_SESSION['account_company'] = $supplierId;
         $_SESSION['account_id'] = $accountId;
         $_SESSION['subscriber_id'] = $ownerId;
         $_SESSION['account_name'] = $employeeFName;
         $_SESSION['account_expiry'] = $accountExpiry;
 
-        $response->Status = "Success";
+        $response->Status = "Successq";
     }
     
     echo json_encode($response);

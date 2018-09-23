@@ -8,9 +8,10 @@
         $stock = $_POST['Stock'];
         $averageWeight = $_POST['AverageWeight'];
         $pricePerKilo = $_POST['PricePerKilo'];
+        $description = $_POST['Description'];
         $dob = $_POST['DOB'];
-        $newBatchId = setRecord("INSERT INTO obbatches (OwnerBreedId,Stock,AverageWeight,PricePerKilo,DOB)
-            VALUES ($ownerBreedId,$stock,$averageWeight,$pricePerKilo,'$dob')");
+        $newBatchId = setRecord("INSERT INTO obbatches (OwnerBreedId,Stock,AverageWeight,PricePerKilo,DOB,Description)
+            VALUES ($ownerBreedId,$stock,$averageWeight,$pricePerKilo,'$dob','$description')");
         $response -> Status = "Successfully Added";
         $response -> BatchId = $newBatchId;
 

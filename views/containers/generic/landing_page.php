@@ -25,19 +25,19 @@
 
   <body>
 
-    <div class="overlay" style="background-color:orange"></div>
+    <div class="overlay" style="background-color:transparent"></div>
     <video playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
       <source src="../../../assets/mp4/bg.mp4" type="video/mp4">
     </video>
 
     <div class="masthead">
-      <div class="masthead-bg" style="background-color:#36688D;opacity:1!important"></div>
+      <div class="masthead-bg" style="background-color:#006400;opacity:1!important"></div>
       <div class="container h-100">
         <div class="row h-100">
           <div class="col-12 my-auto">
             <div class="masthead-content text-white py-5 py-md-0">
-              <h1 class="mb-3">Welcome!</h1>
-              <p class="mb-5">We're working hard to finish the development of this site. Our target launch date is
+              <h1 class="mb-3">Welcome to LivestockPH!</h1>
+              <p class="mb-5">An online marketplace for livestock supplies
               <br>
                 Choose from over <strong><a href="../visitors/view_products.php" style="color:white;text-decoration:underline ">1000 live stock products</a> </strong>!</p>
               <div style="text-align:center;">

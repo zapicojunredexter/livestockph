@@ -14,7 +14,7 @@
     ?>
         <div class="logo">
             <a href="http://www.creative-tim.com" class="simple-text">
-                Creative Tim
+                <img src="../../../assets/img/core-img/logo.png" alt="">
             </a>
         </div>
         <ul class="nav">

@@ -10,7 +10,6 @@
         $categories = getRecords("SELECT * FROM categories");
         $breeds = getRecords("SELECT * FROM breeds");
         $companyId = $_SESSION['account_company'];
-
         $productsOffered = getRecords("SELECT * FROM ownerbreeds o,breeds b,categories c WHERE
         c.CategoryId = b.CategoryId AND b.BreedId = o.BreedId AND o.SupplierNo = $companyId");
 
@@ -148,23 +147,17 @@
                             <div class="container">
                                 <div class="row">
                                     <div class="form-group col-sm-12" style="margin-top:20px;">
-                                        <label>Category</label>
-                                        <select class="form-control" onchange="onChangeCategoryForNewProduct(this.value)">
-                                            <option value=""></option>
+                                        <label>Product</label>
+                                        <select class="form-control" name="OwnerBreedId">
                                             <?php
-                                                foreach($categories as $categor){
-                                                    ?>
+                                            
+                                            foreach($productsOffered as $offered){
+                                                ?>
 
-                                                        <option value="<?php echo $categor['CategoryId']?>"><?php echo $categor['CategoryDescription']?></option>
-                                                    <?php
-                                                }
+                                                    <option value="<?php echo $offered['OwnerBreedId']?>"><?php echo $offered['CategoryDescription']." - ".$offered['BreedDescription']?></option>
+                                                <?php
+                                            }
                                             ?>
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-sm-12">
-                                        <label>breed</label>
-                                        <select class="form-control" id="ownerBreedBatchIds" name="OwnerBreedId">
-
                                         </select>
                                     </div>
                                     <div class="form-group col-sm-12" style="margin-top:20px;">
@@ -191,7 +184,6 @@
                                 </div>
                             </div>
                         </div>
-                        <input type="hidden" name="OwnerBreedId" id="ownerBreedIdField">
                     </div>
                     <div class="modal-footer">
                         <button type="button" onclick="addProductsBatch()" class="btn btn-success">Save changes</button>
@@ -209,8 +201,9 @@
         function onChangeCategoryForNewProduct(categoryId){
             $('#ownerBreedBatchIds').empty();
             for(var i = 0; i< breeds.length;i+=1){
+                console.log(breeds[i]);
                 if(breeds[i].CategoryId == categoryId){
-                    $('#ownerBreedBatchIds').append("<option value='"+breeds[i].BreedId+"'>"+breeds[i].BreedDescription+"</option>");
+                    $('#ownerBreedBatchIds').append("<option value='"+breeds[i].OwnerBreedId+"'>"+breeds[i].BreedDescription+"</option>");
                 }
            }
         }
@@ -227,7 +220,11 @@
                 url: "../../../controllers/subscribers/add_products_batch.php",
                 data: $('#addInventoryBatchForm').serialize(),
                 success: function(result){
+                    console.log($('#addInventoryBatchForm').serialize());
+                    console.log(result);
                     var jsonResult = JSON.parse(result);
+                    
+                    return;
                     if(jsonResult.Status=='Successfully Added'){
                         window.location.href="manage_batch.php?id="+jsonResult.BatchId;
                     }else{
@@ -466,10 +463,11 @@
 
     <script>
         var categories = <?php echo json_encode($categories)?>;
-        var breeds = <?php echo json_encode($breeds)?>;
+        var breeds = <?php echo json_encode($productsOffered)?>;
         function onChangeCategory(categoryId){
             $('#selectBreed').empty();
             for(var i = 0; i< breeds.length;i+=1){
+                console.log(breeds[i]);
                 if(breeds[i].CategoryId == categoryId){
                     $('#selectBreed').append("<option value='"+breeds[i].BreedId+"'>"+breeds[i].BreedDescription+"</option>");
                 }
